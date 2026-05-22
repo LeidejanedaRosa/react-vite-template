@@ -22,7 +22,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
       aria-label='Carregando conteúdo'
     >
       <svg
-        className={`animate-spin text-primary-600 ${sizeClasses[size]}`}
+        className={`text-primary-600 animate-spin ${sizeClasses[size]}`}
         xmlns='http://www.w3.org/2000/svg'
         fill='none'
         viewBox='0 0 24 24'
@@ -47,25 +47,25 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
 }
 
 const SectionSkeleton: React.FC = () => (
-  <div className='py-24 bg-gray-50' role='status' aria-label='Carregando seção'>
-    <div className='max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8'>
+  <div className='bg-gray-50 py-24' role='status' aria-label='Carregando seção'>
+    <div className='mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8'>
       <div className='animate-pulse'>
         <div
           data-testid='skeleton-header'
-          className='h-8 bg-gray-200 rounded w-1/3 mx-auto mb-8'
+          className='mx-auto mb-8 h-8 w-1/3 rounded bg-gray-200'
         />
         <div
           data-testid='skeleton-description'
-          className='h-4 bg-gray-200 rounded w-2/3 mx-auto mb-12'
+          className='mx-auto mb-12 h-4 w-2/3 rounded bg-gray-200'
         />
-        <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
+        <div className='grid grid-cols-1 gap-8 md:grid-cols-3'>
           {[...Array(3)].map((_, index) => (
-            <div key={index} className='bg-white p-8 rounded-xl shadow-lg'>
-              <div className='h-12 bg-gray-200 rounded mb-4' />
-              <div className='h-6 bg-gray-200 rounded mb-4' />
+            <div key={index} className='rounded-xl bg-white p-8 shadow-lg'>
+              <div className='mb-4 h-12 rounded bg-gray-200' />
+              <div className='mb-4 h-6 rounded bg-gray-200' />
               <div className='space-y-2'>
-                <div className='h-4 bg-gray-200 rounded' />
-                <div className='h-4 bg-gray-200 rounded w-3/4' />
+                <div className='h-4 rounded bg-gray-200' />
+                <div className='h-4 w-3/4 rounded bg-gray-200' />
               </div>
             </div>
           ))}

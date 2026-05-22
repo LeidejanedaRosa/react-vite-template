@@ -1,11 +1,10 @@
-import type { HTMLAttributes } from 'react'
+import type { AnchorHTMLAttributes, HTMLAttributes, ReactNode } from 'react'
 
 export interface AccessibilityProps extends HTMLAttributes<HTMLElement> {
   id?: string
 }
 
-export interface SkipLinkProps
-  extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
+export interface SkipLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
   href: string
-  children: React.ReactNode
+  children: ReactNode
 }

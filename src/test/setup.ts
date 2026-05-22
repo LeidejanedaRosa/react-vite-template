@@ -28,7 +28,10 @@ const MockIntersectionObserver = class {
   readonly rootMargin: string = ''
   readonly thresholds: ReadonlyArray<number> = []
   readonly scrollMargin: string = ''
-  constructor(_callback: IntersectionObserverCallback, _options?: IntersectionObserverInit) {}
+  constructor(
+    _callback: IntersectionObserverCallback,
+    _options?: IntersectionObserverInit
+  ) {}
   disconnect() {}
   observe() {}
   takeRecords(): IntersectionObserverEntry[] {
@@ -36,4 +39,5 @@ const MockIntersectionObserver = class {
   }
   unobserve() {}
 }
-global.IntersectionObserver = MockIntersectionObserver as typeof IntersectionObserver
+global.IntersectionObserver =
+  MockIntersectionObserver as typeof IntersectionObserver

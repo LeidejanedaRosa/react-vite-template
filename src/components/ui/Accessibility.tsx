@@ -10,7 +10,7 @@ export const SkipLink = forwardRef<HTMLAnchorElement, SkipLinkProps>(
     <a
       ref={ref}
       href={href}
-      className='sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 focus:z-[1600] focus:bg-primary focus:text-secondary focus:px-4 focus:py-2 focus:text-base focus:font-medium focus:rounded-br focus:shadow-lg'
+      className='focus:bg-primary focus:text-secondary sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 focus:z-[1600] focus:rounded-br focus:px-4 focus:py-2 focus:text-base focus:font-medium focus:shadow-lg'
       {...props}
     >
       {children}
@@ -157,7 +157,7 @@ AccessibleButton.displayName = 'AccessibleButton'
 
 const LoadingSpinner = () => (
   <svg
-    className='animate-spin h-4 w-4'
+    className='h-4 w-4 animate-spin'
     xmlns='http://www.w3.org/2000/svg'
     fill='none'
     viewBox='0 0 24 24'

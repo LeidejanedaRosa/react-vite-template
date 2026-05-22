@@ -8,7 +8,6 @@ interface ErrorBoundaryState {
   errorInfo?: ErrorInfo
 }
 
- 
 type ErrorHandler = (error: Error, errorInfo: ErrorInfo) => void
 
 interface FallbackProps {
@@ -18,7 +17,7 @@ interface FallbackProps {
 
 interface ErrorBoundaryProps {
   children: ReactNode
-   
+
   fallback?: ReactNode | ((fallbackProps: FallbackProps) => ReactNode)
   onError?: ErrorHandler
 }
@@ -69,7 +68,7 @@ class ErrorBoundary extends React.Component<
 
     // Em desenvolvimento, log do erro para debugging
     if (import.meta.env.DEV) {
-       
+      // eslint-disable-next-line no-console
       console.error('ErrorBoundary caught an error:', error, errorInfo)
     }
 
@@ -97,9 +96,9 @@ class ErrorBoundary extends React.Component<
       }
 
       return (
-        <div className='min-h-screen flex items-center justify-center bg-gray-50'>
-          <div className='max-w-md w-full bg-white shadow-lg rounded-lg p-6'>
-            <div className='flex items-center mb-4'>
+        <div className='flex min-h-screen items-center justify-center bg-gray-50'>
+          <div className='w-full max-w-md rounded-lg bg-white p-6 shadow-lg'>
+            <div className='mb-4 flex items-center'>
               <div className='flex-shrink-0'>
                 <svg
                   className='h-8 w-8 text-red-500'
@@ -122,32 +121,32 @@ class ErrorBoundary extends React.Component<
                 </h3>
               </div>
             </div>
-            <div className='text-sm text-gray-600 mb-4'>
+            <div className='mb-4 text-sm text-gray-600'>
               Ocorreu um erro inesperado. Nossa equipe foi notificada e está
               trabalhando para resolver o problema.
             </div>
             <div className='flex flex-col gap-2'>
               <button
                 onClick={this.resetError}
-                className='w-full bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200'
+                className='bg-primary-600 hover:bg-primary-700 w-full rounded-md px-4 py-2 font-medium text-white transition-colors duration-200'
                 type='button'
               >
                 Tentar novamente
               </button>
               <button
                 onClick={() => window.location.reload()}
-                className='w-full bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md transition-colors duration-200'
+                className='w-full rounded-md bg-gray-200 px-4 py-2 font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-300'
                 type='button'
               >
                 Recarregar página
               </button>
             </div>
             {import.meta.env.DEV && this.state.error && (
-              <details className='mt-4 p-3 bg-gray-100 rounded text-xs'>
+              <details className='mt-4 rounded bg-gray-100 p-3 text-xs'>
                 <summary className='cursor-pointer font-medium'>
                   Detalhes do erro (desenvolvimento)
                 </summary>
-                <pre className='mt-2 text-red-600 whitespace-pre-wrap'>
+                <pre className='mt-2 whitespace-pre-wrap text-red-600'>
                   {this.state.error.toString()}
                   {this.state.errorInfo?.componentStack}
                 </pre>

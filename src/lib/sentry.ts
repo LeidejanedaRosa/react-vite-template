@@ -5,7 +5,10 @@ export function initSentry() {
   const environment = import.meta.env.VITE_SENTRY_ENVIRONMENT || 'production'
 
   if (!dsn) {
-    console.warn('Sentry DSN não configurado')
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.warn('Sentry DSN não configurado')
+    }
     return
   }
 
@@ -31,6 +34,7 @@ export function initSentry() {
       Number(import.meta.env.VITE_SENTRY_REPLAYS_ON_ERROR_SAMPLE_RATE) || 1.0,
 
     // Filtrar erros irrelevantes
+    // eslint-disable-next-line complexity
     beforeSend(event, hint) {
       // Ignorar erros de extensões do browser
       if (

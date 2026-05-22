@@ -8,9 +8,9 @@ export const SectionErrorFallback = ({
   onRetry,
 }: SectionErrorFallbackProps) => {
   return (
-    <div className='py-12 px-4'>
-      <div className='max-w-md mx-auto bg-white border border-gray-200 rounded-lg p-6 text-center shadow-sm'>
-        <div className='w-12 h-12 mx-auto mb-4 text-amber-500'>
+    <div className='px-4 py-12'>
+      <div className='mx-auto max-w-md rounded-lg border border-gray-200 bg-white p-6 text-center shadow-sm'>
+        <div className='mx-auto mb-4 h-12 w-12 text-amber-500'>
           <svg
             fill='none'
             stroke='currentColor'
@@ -25,18 +25,18 @@ export const SectionErrorFallback = ({
             />
           </svg>
         </div>
-        <h3 className='text-lg font-medium text-gray-900 mb-2'>
+        <h3 className='mb-2 text-lg font-medium text-gray-900'>
           {sectionName
             ? `Não foi possível carregar: ${sectionName}`
             : 'Não foi possível carregar esta seção'}
         </h3>
-        <p className='text-sm text-gray-600 mb-4'>
+        <p className='mb-4 text-sm text-gray-600'>
           Ocorreu um erro ao carregar este conteúdo. Tente novamente.
         </p>
         {onRetry && (
           <button
             onClick={onRetry}
-            className='bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200'
+            className='bg-primary-600 hover:bg-primary-700 rounded-md px-4 py-2 font-medium text-white transition-colors duration-200'
             type='button'
           >
             Tentar novamente

@@ -10,8 +10,8 @@ test.describe('Semantic HTML Structure Tests', () => {
 
   test.describe('HTML5 Semantic Elements - WCAG 1.3.1', () => {
     test('should have exactly one main element', async ({ page }) => {
-      const mainElements = await page.locator('main').count()
-      expect(mainElements).toBe(1)
+      const mainElements = page.locator('main')
+      await expect(mainElements).toHaveCount(1)
     })
 
     test('should have main element visible and not hidden', async ({
@@ -47,8 +47,8 @@ test.describe('Semantic HTML Structure Tests', () => {
 
   test.describe('Heading Hierarchy - WCAG 1.3.1 & 2.4.6', () => {
     test('should have exactly one h1 element', async ({ page }) => {
-      const h1Count = await page.locator('h1').count()
-      expect(h1Count).toBe(1)
+      const h1Count = page.locator('h1')
+      await expect(h1Count).toHaveCount(1)
     })
 
     test('h1 should not be empty', async ({ page }) => {
@@ -108,8 +108,8 @@ test.describe('Semantic HTML Structure Tests', () => {
     })
 
     test('main content should have main landmark', async ({ page }) => {
-      const mainLandmark = await page.locator('main, [role="main"]').count()
-      expect(mainLandmark).toBe(1)
+      const mainLandmark = page.locator('main, [role="main"]')
+      await expect(mainLandmark).toHaveCount(1)
     })
 
     test('page should have contentinfo landmark (footer)', async ({ page }) => {
@@ -295,10 +295,9 @@ test.describe('Semantic HTML Structure Tests', () => {
 
   test.describe('Semantic Content Structure', () => {
     test('should not use div for button functionality', async ({ page }) => {
-      const divButtons = await page
-        .locator('div[onclick], div[role="button"]')
-        .count()
-      expect(divButtons).toBe(0)
+      const divButtons = page.locator('div[onclick], div[role="button"]')
+
+      await expect(divButtons).toHaveCount(0)
     })
 
     test('should use button elements for actions', async ({ page }) => {

@@ -1,6 +1,9 @@
 import { COMPANY_INFO } from '../data/companyInfo'
 import { JsonLdScript } from './JsonLdScript'
 
+const SCHEMA_TYPE = '@type' as const
+const SCHEMA_CONTEXT = 'https://schema.org'
+
 /**
  * Organization Schema Component
  *
@@ -29,13 +32,13 @@ export function OrganizationSchema() {
   )
 
   const organizationSchema = {
-    '@type': 'Organization' as const,
+    [SCHEMA_TYPE]: 'Organization' as const,
     '@id': `${url}/#organization`,
     name,
     legalName,
     url,
     logo: {
-      '@type': 'ImageObject' as const,
+      [SCHEMA_TYPE]: 'ImageObject' as const,
       url: `${url}${logo}`,
       width: 200,
       height: 60,
@@ -44,7 +47,7 @@ export function OrganizationSchema() {
     description,
     foundingDate,
     address: {
-      '@type': 'PostalAddress' as const,
+      [SCHEMA_TYPE]: 'PostalAddress' as const,
       addressCountry: address.countryCode,
       addressRegion: address.state,
       addressLocality: address.city,
@@ -53,7 +56,7 @@ export function OrganizationSchema() {
     },
     contactPoint: [
       {
-        '@type': 'ContactPoint' as const,
+        [SCHEMA_TYPE]: 'ContactPoint' as const,
         telephone: contact.phone,
         email: contact.email,
         contactType: 'customer service',
@@ -64,7 +67,7 @@ export function OrganizationSchema() {
   }
 
   const webSiteSchema = {
-    '@type': 'WebSite' as const,
+    [SCHEMA_TYPE]: 'WebSite' as const,
     '@id': `${url}/#website`,
     name,
     url,
@@ -76,7 +79,7 @@ export function OrganizationSchema() {
   }
 
   const structuredData = {
-    '@context': 'https://schema.org',
+    '@context': SCHEMA_CONTEXT,
     '@graph': [webSiteSchema, organizationSchema],
   }
 
@@ -104,12 +107,12 @@ export function BreadcrumbSchema({ items }: BreadcrumbSchemaProps) {
   const { url: baseUrl } = COMPANY_INFO
 
   const breadcrumbSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList' as const,
+    '@context': SCHEMA_CONTEXT,
+    [SCHEMA_TYPE]: 'BreadcrumbList' as const,
     itemListElement: items.map((item, index) => {
       const isLastItem = index === items.length - 1
       const listItem: Record<string, unknown> = {
-        '@type': 'ListItem' as const,
+        [SCHEMA_TYPE]: 'ListItem' as const,
         position: index + 1,
         name: item.name,
       }
@@ -156,15 +159,15 @@ export function ArticleSchema({
   const { url, name } = COMPANY_INFO
 
   const articleSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'Article' as const,
+    '@context': SCHEMA_CONTEXT,
+    [SCHEMA_TYPE]: 'Article' as const,
     headline: title,
     description,
     image,
     datePublished,
     dateModified: dateModified || datePublished,
     author: {
-      '@type': 'Person' as const,
+      [SCHEMA_TYPE]: 'Person' as const,
       name: authorName || name,
     },
     publisher: {
@@ -207,8 +210,8 @@ export function ProductSchema({
   const { url } = COMPANY_INFO
 
   const productSchema: Record<string, unknown> = {
-    '@context': 'https://schema.org',
-    '@type': 'Product' as const,
+    '@context': SCHEMA_CONTEXT,
+    [SCHEMA_TYPE]: 'Product' as const,
     name,
     description,
     image,
@@ -219,7 +222,7 @@ export function ProductSchema({
 
   if (price) {
     productSchema.offers = {
-      '@type': 'Offer' as const,
+      [SCHEMA_TYPE]: 'Offer' as const,
       price,
       priceCurrency: currency,
       availability: `https://schema.org/${availability}`,
@@ -228,7 +231,7 @@ export function ProductSchema({
 
   if (rating) {
     productSchema.aggregateRating = {
-      '@type': 'AggregateRating' as const,
+      [SCHEMA_TYPE]: 'AggregateRating' as const,
       ratingValue: rating.value,
       reviewCount: rating.count,
     }
@@ -255,13 +258,13 @@ interface FAQSchemaProps {
 
 export function FAQSchema({ items }: FAQSchemaProps) {
   const faqSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage' as const,
+    '@context': SCHEMA_CONTEXT,
+    [SCHEMA_TYPE]: 'FAQPage' as const,
     mainEntity: items.map(item => ({
-      '@type': 'Question' as const,
+      [SCHEMA_TYPE]: 'Question' as const,
       name: item.question,
       acceptedAnswer: {
-        '@type': 'Answer' as const,
+        [SCHEMA_TYPE]: 'Answer' as const,
         text: item.answer,
       },
     })),

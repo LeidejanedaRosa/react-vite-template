@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import {
   COMPANY_INFO,
@@ -8,36 +8,30 @@ import {
   hasPlaceholderData,
 } from '../companyInfo'
 
+afterEach(() => {
+  vi.restoreAllMocks()
+})
+
 describe('hasPlaceholderData', () => {
   it('returns true when using default placeholder name', () => {
     expect(hasPlaceholderData()).toBe(true)
   })
 
   it('returns true when name is customized but url is still placeholder', () => {
-    const info = COMPANY_INFO as unknown as Record<string, string>
-    const originalName = info.name
-    info.name = 'Custom Company'
-
-    try {
-      expect(hasPlaceholderData()).toBe(true)
-    } finally {
-      info.name = originalName
-    }
+    vi.spyOn(COMPANY_INFO as { name: string }, 'name', 'get').mockReturnValue(
+      'Custom Company'
+    )
+    expect(hasPlaceholderData()).toBe(true)
   })
 
   it('returns false when both name and url are customized', () => {
-    const info = COMPANY_INFO as unknown as Record<string, string>
-    const originalName = info.name
-    const originalUrl = info.url
-    info.name = 'Custom Company'
-    info.url = 'https://customcompany.com'
-
-    try {
-      expect(hasPlaceholderData()).toBe(false)
-    } finally {
-      info.name = originalName
-      info.url = originalUrl
-    }
+    vi.spyOn(COMPANY_INFO as { name: string }, 'name', 'get').mockReturnValue(
+      'Custom Company'
+    )
+    vi.spyOn(COMPANY_INFO as { url: string }, 'url', 'get').mockReturnValue(
+      'https://customcompany.com'
+    )
+    expect(hasPlaceholderData()).toBe(false)
   })
 })
 
@@ -72,20 +66,16 @@ describe('getSocialLinks', () => {
   })
 
   it('maps non-placeholder links to {platform, url} objects', () => {
-    // COMPANY_INFO is typed as const but not Object.freeze'd — safe to mutate in tests
-    const social = COMPANY_INFO.social as Record<string, string>
-    const original = social.instagram
-    social.instagram = 'https://instagram.com/acme'
-
-    try {
-      const links = getSocialLinks()
-      expect(links).toContainEqual({
-        platform: 'instagram',
-        url: 'https://instagram.com/acme',
-      })
-    } finally {
-      social.instagram = original
-    }
+    const mockSocial = {
+      ...COMPANY_INFO.social,
+      instagram: 'https://instagram.com/acme',
+    } as unknown as typeof COMPANY_INFO.social
+    vi.spyOn(COMPANY_INFO, 'social', 'get').mockReturnValue(mockSocial)
+    const links = getSocialLinks()
+    expect(links).toContainEqual({
+      platform: 'instagram',
+      url: 'https://instagram.com/acme',
+    })
   })
 })
 

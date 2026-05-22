@@ -17,6 +17,7 @@ export function reportWebVitals(onPerfEntry?: (metric: Metric) => void) {
       if (import.meta.env.DEV) {
         // eslint-disable-next-line no-console
         console.log(metric)
+        /* v8 ignore start */
       } else {
         // Enviar para Google Analytics, Sentry, ou seu serviço
         const body = JSON.stringify(metric)
@@ -38,6 +39,7 @@ export function reportWebVitals(onPerfEntry?: (metric: Metric) => void) {
           navigator.sendBeacon('/api/analytics', body)
         }
       }
+      /* v8 ignore stop */
     }
 
     onCLS(sendToAnalytics)

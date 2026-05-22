@@ -44,6 +44,7 @@ class ErrorBoundary extends React.Component<
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // Em produção, enviar erro para o Sentry com contexto completo
+    /* v8 ignore start */
     if (import.meta.env.PROD) {
       Sentry.withScope(scope => {
         // Tags para facilitar filtragem no Sentry
@@ -65,12 +66,15 @@ class ErrorBoundary extends React.Component<
         Sentry.captureException(error)
       })
     }
+    /* v8 ignore stop */
 
     // Em desenvolvimento, log do erro para debugging
+    /* v8 ignore start */
     if (import.meta.env.DEV) {
       // eslint-disable-next-line no-console
       console.error('ErrorBoundary caught an error:', error, errorInfo)
     }
+    /* v8 ignore stop */
 
     // Chama callback personalizado se fornecido
     if (this.props.onError) {

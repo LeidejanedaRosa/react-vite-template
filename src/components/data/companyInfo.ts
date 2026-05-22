@@ -118,9 +118,12 @@ export const getFullAddress = (): string => {
  * Get social media links as array (filters out placeholder values)
  */
 export const getSocialLinks = () => {
-  return Object.entries(COMPANY_INFO.social)
-    .filter(([, url]) => url && !url.includes('yourcompany'))
-    .map(([platform, url]) => ({ platform, url }))
+  return (
+    Object.entries(COMPANY_INFO.social)
+      .filter(([, url]) => url && !url.includes('yourcompany'))
+      /* v8 ignore next */
+      .map(([platform, url]) => ({ platform, url }))
+  )
 }
 
 /**

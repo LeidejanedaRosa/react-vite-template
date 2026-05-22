@@ -11,7 +11,7 @@ describe('Container', () => {
 
   it('applies default xl max-width', () => {
     const { container } = render(<Container>content</Container>)
-    expect(container.firstChild).toHaveClass('max-w-screen-xl')
+    expect(container.firstChild).toHaveClass('max-w-7xl')
   })
 
   it('applies sm max-width', () => {
@@ -21,12 +21,12 @@ describe('Container', () => {
 
   it('applies md max-width', () => {
     const { container } = render(<Container size='md'>content</Container>)
-    expect(container.firstChild).toHaveClass('max-w-screen-md')
+    expect(container.firstChild).toHaveClass('max-w-3xl')
   })
 
   it('applies lg max-width', () => {
     const { container } = render(<Container size='lg'>content</Container>)
-    expect(container.firstChild).toHaveClass('max-w-screen-lg')
+    expect(container.firstChild).toHaveClass('max-w-5xl')
   })
 
   it('applies full max-width', () => {

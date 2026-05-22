@@ -27,7 +27,7 @@ describe('SkipLink', () => {
       'focus:absolute',
       'focus:top-0',
       'focus:left-0',
-      'focus:z-[1600]',
+      'focus:z-1600',
       'focus:bg-primary',
       'focus:text-secondary'
     )

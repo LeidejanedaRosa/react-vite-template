@@ -1,23 +1,48 @@
-import { defineConfig } from 'vite'
+import { sentryVitePlugin } from '@sentry/vite-plugin'
+import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
 import { visualizer } from 'rollup-plugin-visualizer'
+import { defineConfig } from 'vite'
 
-// https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
+export default defineConfig({
   plugins: [
+    tailwindcss(),
     react(),
-    // Bundle analyzer - apenas em modo analyze
-    mode === 'analyze' &&
-      visualizer({
-        open: true,
-        filename: 'dist/stats.html',
-        gzipSize: true,
-        brotliSize: true,
-      }),
-  ].filter(Boolean),
+    ...(process.env.NODE_ENV === 'production' &&
+    process.env.SENTRY_AUTH_TOKEN &&
+    process.env.SENTRY_ORG &&
+    process.env.SENTRY_PROJECT
+      ? [
+          sentryVitePlugin({
+            org: process.env.SENTRY_ORG,
+            project: process.env.SENTRY_PROJECT,
+            authToken: process.env.SENTRY_AUTH_TOKEN,
+            sourcemaps: {
+              assets: './dist/**',
+              ignore: ['node_modules'],
+              filesToDeleteAfterUpload: ['./dist/**/*.map'],
+            },
+            release: {
+              name: process.env.VITE_APP_VERSION,
+              setCommits: { auto: true, ignoreMissing: true },
+            },
+            telemetry: false,
+          }),
+        ]
+      : []),
+    ...(process.env.ANALYZE === 'true'
+      ? [
+          visualizer({
+            open: true,
+            filename: 'dist/stats.html',
+            gzipSize: true,
+            brotliSize: true,
+          }),
+        ]
+      : []),
+  ],
 
-  // Path aliases
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -32,27 +57,29 @@ export default defineConfig(({ mode }) => ({
     },
   },
 
-  // Build optimization
   build: {
+    outDir: 'dist',
+    target: 'es2022',
+    sourcemap: process.env.NODE_ENV === 'production' ? 'hidden' : false,
+    cssCodeSplit: true,
     rollupOptions: {
       output: {
         manualChunks: {
-          'react-vendor': ['react', 'react-dom'],
+          'vendor-react': ['react', 'react-dom'],
+          'vendor-sentry': ['@sentry/react'],
         },
       },
     },
-    // Source maps para produção (útil com Sentry)
-    sourcemap: true,
   },
 
-  // Preview server config
-  preview: {
-    port: 4173,
-  },
-
-  // Dev server config
   server: {
     port: 5173,
     open: true,
+    host: true,
   },
-}))
+
+  preview: {
+    port: 4173,
+    host: true,
+  },
+})

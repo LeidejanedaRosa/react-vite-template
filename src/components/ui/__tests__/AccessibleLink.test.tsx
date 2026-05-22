@@ -155,6 +155,15 @@ describe('AccessibleLink', () => {
     expect(link).toHaveAttribute('aria-current', 'location')
   })
 
+  it('should not throw when a key is pressed without an onKeyDown handler', async () => {
+    const user = userEvent.setup()
+    render(<AccessibleLink href='/test'>Link</AccessibleLink>)
+    const link = screen.getByRole('link')
+    link.focus()
+    // Pressing a key on a link without onKeyDown should not throw
+    await user.keyboard('{Tab}')
+  })
+
   it('should handle keyboard navigation', async () => {
     const user = userEvent.setup()
     render(

@@ -121,6 +121,28 @@ describe('AccessibleButton', () => {
     expect(screen.getByTestId('loading-spinner')).toBeInTheDocument()
   })
 
+  it('should not throw when clicked without an onClick handler', async () => {
+    const user = userEvent.setup()
+    render(<AccessibleButton>No handler</AccessibleButton>)
+    // Clicking a non-disabled button with no onClick should not throw
+    await user.click(screen.getByRole('button'))
+  })
+
+  it('should call onKeyDown handler when provided', async () => {
+    const handleKeyDown = vi.fn()
+    const user = userEvent.setup()
+
+    render(
+      <AccessibleButton onKeyDown={handleKeyDown}>Button</AccessibleButton>
+    )
+
+    const button = screen.getByRole('button')
+    button.focus()
+    await user.keyboard('{Tab}')
+
+    expect(handleKeyDown).toHaveBeenCalled()
+  })
+
   it('should not fire click events when loading', async () => {
     const handleClick = vi.fn()
     const user = userEvent.setup()

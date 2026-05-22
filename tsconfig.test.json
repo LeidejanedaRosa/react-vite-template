@@ -9,7 +9,7 @@
   },
   "references": [{ "path": "./tsconfig.app.json" }],
   "include": [
-    "src/vite-env.d.ts",
+    "src/types/**/*.d.ts",
     "src/**/*.test.ts",
     "src/**/*.test.tsx",
     "src/**/*.spec.ts",

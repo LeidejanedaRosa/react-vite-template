@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import { render } from '../../../test/test-utils'
+import { COMPANY_INFO } from '../../data/companyInfo'
 import {
   ArticleSchema,
   BreadcrumbSchema,
@@ -143,7 +144,7 @@ describe('ArticleSchema', () => {
   it('uses company name as author when authorName is not provided', () => {
     const { container } = render(<ArticleSchema {...baseProps} />)
     const data = getScriptData(container)
-    expect(data.author.name).toBeTruthy()
+    expect(data.author.name).toBe(COMPANY_INFO.name)
   })
 
   it('uses provided authorName when specified', () => {

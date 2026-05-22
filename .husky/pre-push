@@ -1,9 +1,5 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
 echo "🧪 Rodando testes antes do push..."
 
-# Run tests
 pnpm run test
 
 if [ $? -ne 0 ]; then

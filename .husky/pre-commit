@@ -1,13 +1,8 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
 echo "🔍 Rodando verificações pre-commit..."
 
-# Lint staged files
 echo "📝 Checando lint e formatação..."
 pnpm exec lint-staged
 
-# Type check
 echo "🔷 Checando tipos TypeScript..."
 pnpm run type-check
 

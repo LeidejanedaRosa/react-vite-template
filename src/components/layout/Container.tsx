@@ -19,9 +19,9 @@ export function Container({
         'mx-auto w-full px-4 sm:px-6 lg:px-8',
         {
           'max-w-screen-sm': size === 'sm',
-          'max-w-screen-md': size === 'md',
-          'max-w-screen-lg': size === 'lg',
-          'max-w-screen-xl': size === 'xl',
+          'max-w-3xl': size === 'md',
+          'max-w-5xl': size === 'lg',
+          'max-w-7xl': size === 'xl',
           'max-w-full': size === 'full',
         },
         className

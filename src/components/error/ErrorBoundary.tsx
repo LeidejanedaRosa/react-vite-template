@@ -103,7 +103,7 @@ class ErrorBoundary extends React.Component<
         <div className='flex min-h-screen items-center justify-center bg-gray-50'>
           <div className='w-full max-w-md rounded-lg bg-white p-6 shadow-lg'>
             <div className='mb-4 flex items-center'>
-              <div className='flex-shrink-0'>
+              <div className='shrink-0'>
                 <svg
                   className='h-8 w-8 text-red-500'
                   fill='none'

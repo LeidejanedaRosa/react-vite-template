@@ -140,13 +140,13 @@ describe('ErrorBoundary', () => {
       </ErrorBoundary>
     )
 
-    // In dev mode (import.meta.env.DEV = true), details element is rendered
     const details = container.querySelector('details')
-    // In test environment DEV might be true or false — just verify the UI was rendered
-    expect(screen.getByText('Algo deu errado')).toBeInTheDocument()
 
-    // Suppress unused variable warning
-    void details
+    if (import.meta.env.DEV) {
+      expect(details).toBeInTheDocument()
+    } else {
+      expect(details).not.toBeInTheDocument()
+    }
   })
 
   it('reloads the page when the reload button is clicked', async () => {

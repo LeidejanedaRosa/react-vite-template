@@ -1,16 +1,20 @@
 # Arquitetura do Template
 
-> Documentação da stack tecnológica e decisões arquiteturais
+Documentação da stack tecnológica e decisões arquiteturais do template.
+
+**Última atualização:** 22 de maio de 2026
+
+---
 
 ## Índice
 
 - [Core Stack](#core-stack)
-- [Roteamento](#roteamento)
 - [Qualidade de Código](#qualidade-de-código)
 - [Testes](#testes)
 - [Monitoramento e Performance](#monitoramento-e-performance)
 - [Build e Otimização](#build-e-otimização)
-- [Configurações Adicionais](#configurações-adicionais)
+- [Princípios da Arquitetura](#princípios-da-arquitetura)
+- [Próximos Passos (ao escalar)](#próximos-passos-ao-escalar)
 
 ---
 
@@ -20,344 +24,382 @@
 
 **Para que serve:** Biblioteca JavaScript para construção de interfaces de usuário.
 
-**Por que escolhi:**
-- **Suporte nativo a meta tags:** React 19 introduziu a capacidade de usar `<title>`, `<meta>`, `<link>` diretamente no JSX, eliminando a necessidade de bibliotecas como `react-helmet`
+**Por que foi escolhida:**
+
+- **Meta tags nativas:** React 19 introduziu suporte nativo a `<title>`, `<meta>`, `<link>` e `<script>` diretamente no JSX — elimina a necessidade de bibliotecas como `react-helmet` ou `react-helmet-async`
 - **Performance melhorada:** Novas otimizações no rendering e reconciliação
-- **Melhor TypeScript:** Tipos mais precisos e melhor inferência
-- **Compilador otimizado:** React Compiler reduz a necessidade de memoizações manuais
-- **Ecossistema maduro:** Maior biblioteca de componentes, ferramentas e comunidade ativa
+- **TypeScript mais preciso:** Tipos mais exatos e melhor inferência de tipos genéricos
+- **StrictMode mais rigoroso:** Detecta mais problemas durante desenvolvimento
 
 **Versão:** 19.x
 
 ---
 
-### Vite
+### Vite 6
 
-**Para que serve:** Build tool e dev server extremamente rápido.
+**Para que serve:** Build tool e dev server.
 
-**Por que escolhi:**
-- **Velocidade:** HMR (Hot Module Replacement) instantâneo usando ESM nativo
-- **Simplicidade:** Configuração mínima para começar
-- **Performance de build:** Usa Rollup internamente para builds otimizados em produção
-- **Plugins modernos:** Ecossistema rico e compatível com a maioria das ferramentas
-- **Dev Experience superior:** Feedback instantâneo durante desenvolvimento
+**Por que foi escolhida:**
 
-**Versão:** 5.x ou superior
+- **HMR instantâneo:** Hot Module Replacement usando ESM nativo — feedback em < 100ms
+- **Build com Rollup:** Code splitting automático, tree-shaking e otimizações de produção
+- **Configuração mínima:** Funciona com zero config para React + TypeScript
+- **Ecossistema rico:** Plugins para Tailwind, Sentry, PWA, visualizer e mais
+- **Dev server rápido:** Não empacota o código fonte durante desenvolvimento
+
+**Versão:** 6.x
 
 ---
 
-### TypeScript
+### TypeScript 5.7
 
-**Para que serve:** Superset do JavaScript que adiciona tipagem estática.
+**Para que serve:** Tipagem estática sobre JavaScript.
 
-**Por que escolhi:**
-- **Segurança:** Detecta erros em tempo de desenvolvimento, não em produção
-- **Manutenibilidade:** Código autodocumentado e mais fácil de refatorar
-- **Intellisense:** Autocompletar inteligente na IDE
-- **Escalabilidade:** Fundamental para projetos que crescem
-- **Padrão da indústria:** Amplamente adotado em projetos profissionais
+**Por que foi escolhida:**
 
-**Versão:** 5.x
+- **Strict mode completo:** `strict: true`, `noUnusedLocals`, `noUnusedParameters` — detecta mais erros em desenvolvimento
+- **Project references:** Três tsconfigs separados (`app`, `test`, `node`) para contextos diferentes
+- **Autocompletar:** IDE sabe os tipos de todas as propriedades e funções
+- **Documentação viva:** Tipos são a documentação mais confiável — sempre atualizada
+
+**Versão:** 5.7.x
+
+**Três contextos TypeScript:**
+
+| Arquivo              | Escopo                            | Particularidades                                                  |
+| -------------------- | --------------------------------- | ----------------------------------------------------------------- |
+| `tsconfig.app.json`  | `src/` (exceto testes)            | `emitDeclarationOnly: true`, exclui arquivos de teste             |
+| `tsconfig.test.json` | Arquivos `*.test.*` e `src/test/` | Inclui `@types/vitest` via `globals: true` no vitest              |
+| `tsconfig.node.json` | Arquivos de configuração          | Para `vite.config.ts`, `vitest.config.ts`, `playwright.config.ts` |
 
 ---
 
 ### Tailwind CSS 4
 
-**Para que serve:** Framework CSS utility-first para estilização rápida e consistente.
+**Para que serve:** Framework CSS utility-first.
 
-**Por que escolhi:**
-- **Produtividade:** Escrever estilos diretamente no JSX acelera o desenvolvimento
-- **Consistência:** Sistema de design integrado (spacing, cores, typography)
-- **Performance:** PurgeCSS embutido remove CSS não utilizado
-- **Versão 4:** Engine de CSS nativo, melhor performance e novas features
-- **Responsividade:** Modifiers intuitivos para diferentes breakpoints
-- **Customização:** Fácil de estender e adaptar ao design system
+**Por que foi escolhida:**
+
+- **Engine CSS nativo (v4):** Não precisa de `tailwind.config.js` — configuração via `@theme` em CSS
+- **Zero CSS morto:** PurgeCSS integrado remove todas as classes não usadas na build
+- **Integração Vite nativa:** Plugin `@tailwindcss/vite` — sem PostCSS manual
+- **Consistência:** Sistema de design com spacing, cores e tipografia padronizados
+- **Responsividade intuitiva:** `sm:`, `md:`, `lg:`, `xl:` em qualquer utilidade
 
 **Versão:** 4.x
 
----
-
-## Roteamento
-
-### TanStack Router
-
-**Para que serve:** Roteamento type-safe para aplicações React.
-
-**Por que escolhi:**
-- **Type Safety total:** Rotas, params, search params tipados nativamente
-- **Performance:** Code-splitting automático e preloading inteligente
-- **Developer Experience:** Autocomplete para navegação e links
-- **File-based routing (opcional):** Estrutura de rotas baseada em arquivos
-- **Escalabilidade:** Preparado para aplicações complexas
-- **Melhor que React Router:** Tipos mais robustos e features modernas
-
-**Quando usar:** Quando o projeto escalar além de uma landing page simples.
-
-**Versão:** Última stable
-
----
-
-## Qualidade de Código
-
-### Husky
-
-**Para que serve:** Gerencia Git hooks para automatizar verificações antes de commits.
-
-**Por que escolhi:**
-- **Prevenção:** Impede commits com código quebrado ou mal formatado
-- **Automação:** Roda linting e testes automaticamente
-- **Padronização:** Garante que todo código commitado segue os padrões
-- **Configuração simples:** Fácil de integrar com outras ferramentas
-
-**Hooks configurados:**
-- `pre-commit`: Executa linting e formatação
-- `pre-push`: Executa testes (opcional)
-
-**Versão:** 9.x
-
----
-
-### ESLint
-
-**Para que serve:** Ferramenta de linting para identificar e corrigir problemas no código JavaScript/TypeScript.
-
-**Por que escolhi:**
-- **Qualidade:** Detecta bugs, code smells e problemas de performance
-- **Consistência:** Força padrões de código em todo o projeto
-- **Extensível:** Plugins para React, TypeScript, a11y, etc
-- **Autofix:** Corrige problemas automaticamente quando possível
-- **Educacional:** Ajuda a aprender boas práticas
-
-**Plugins recomendados:**
-- `eslint-plugin-react` e `eslint-plugin-react-hooks`
-- `@typescript-eslint`
-- `eslint-plugin-jsx-a11y` (acessibilidade)
-
-**Versão:** 9.x
-
----
-
-### Prettier
-
-**Para que serve:** Formatador de código opinativo.
-
-**Por que escolhi:**
-- **Consistência visual:** Todo código formatado da mesma forma
-- **Zero discussões:** Elimina debates sobre estilo de código
-- **Automação:** Formata automaticamente ao salvar ou commitar
-- **Integração:** Funciona bem com ESLint via `eslint-config-prettier`
-- **Produtividade:** Não perde tempo formatando manualmente
-
-**Versão:** 3.x
-
----
-
-## Testes
-
-### Vitest
-
-**Para que serve:** Framework de testes unitários e de integração, compatível com Vite.
-
-**Por que escolhi:**
-- **Velocidade:** Extremamente rápido, usa a mesma pipeline do Vite
-- **Compatibilidade:** API similar ao Jest, migração fácil
-- **ESM nativo:** Suporta módulos ES nativamente
-- **TypeScript first:** Funciona perfeitamente com TS sem configuração extra
-- **Watch mode inteligente:** Reexecuta apenas testes relacionados às mudanças
-- **UI mode:** Interface visual para debug de testes
-
-**O que testar:**
-- Componentes (React Testing Library)
-- Funções utilitárias
-- Hooks customizados
-- Lógica de negócio
-
-**Versão:** 2.x
-
----
-
-### Playwright
-
-**Para que serve:** Framework de testes end-to-end (E2E) para aplicações web.
-
-**Por que escolhi:**
-- **Cross-browser:** Testa em Chromium, Firefox e WebKit
-- **Confiável:** Espera automática, menos flakiness
-- **Developer Experience:** Debug visual, trace viewer, code generator
-- **Performance:** Execução paralela de testes
-- **Moderno:** Suporta PWAs, mobile emulation, network mocking
-- **Melhor que Cypress:** Mais rápido, multi-tab, melhor para CI/CD
-
-**O que testar:**
-- Fluxos críticos (checkout, login, cadastro)
-- Formulários complexos
-- Navegação entre páginas
-- Integrações com APIs
-
-**Versão:** 1.x
-
----
-
-## Monitoramento e Performance
-
-### Lighthouse
-
-**Para que serve:** Ferramenta automatizada para melhorar qualidade de páginas web.
-
-**Por que escolhi:**
-- **Auditoria completa:** Performance, acessibilidade, SEO, PWA, boas práticas
-- **Padrão do Google:** Usado para avaliar sites no Google Search
-- **Automatizável:** Pode ser integrado ao CI/CD
-- **Educacional:** Explica problemas e sugere soluções
-- **Gratuito:** Embutido no Chrome DevTools
-
-**Métricas acompanhadas:**
-- Performance Score
-- Accessibility Score
-- Best Practices Score
-- SEO Score
-
-**Uso:** Executar manualmente no DevTools ou via CLI no CI/CD
-
----
-
-### Sentry
-
-**Para que serve:** Plataforma de monitoramento de erros e performance em produção.
-
-**Por que escolhi:**
-- **Error tracking:** Captura erros JavaScript em tempo real
-- **Source maps:** Mostra código original, não minificado
-- **Performance monitoring:** Detecta problemas de performance
-- **User context:** Sabe qual usuário foi afetado por um erro
-- **Alertas:** Notificações quando algo quebra
-- **Release tracking:** Correlaciona erros com deploys específicos
-
-**Features configuradas:**
-- Error tracking
-- Performance monitoring
-- Session replay (opcional)
-- Release health
-
-**Versão:** SDK mais recente
-
----
-
-### Core Web Vitals
-
-**Para que serve:** Conjunto de métricas do Google para medir experiência do usuário.
-
-**Por que escolhi:**
-- **SEO:** Google usa essas métricas para ranking
-- **UX quantificado:** Métricas objetivas de experiência do usuário
-- **Padrão da indústria:** Amplamente aceito como benchmark
-- **Monitoramento real:** Medição com usuários reais (RUM)
-
-**Métricas principais:**
-- **LCP (Largest Contentful Paint):** Velocidade de carregamento
-- **INP (Interaction to Next Paint):** Interatividade (substitui FID)
-- **CLS (Cumulative Layout Shift):** Estabilidade visual
-
-**Implementação:** Via `web-vitals` library integrado com Sentry/Analytics
-
----
-
-## Build e Otimização
-
-### Rollup Plugin Visualizer
-
-**Para que serve:** Visualiza o tamanho dos bundles gerados e suas dependências.
-
-**Por que escolhi:**
-- **Análise de bundle:** Identifica dependências pesadas
-- **Otimização:** Ajuda a decidir o que otimizar ou remover
-- **Tree-shaking:** Verifica se está funcionando corretamente
-- **Gráficos visuais:** Sunburst, treemap, network diagrams
-- **Performance budgets:** Mantém bundles dentro de limites aceitáveis
-
-**Uso:** Gera relatório após build de produção
-
-**Versão:** 5.x
-
----
-
-## Configurações Adicionais
-
-### Path Aliases
-
-**Para que serve:** Cria atalhos para importações de módulos.
-
-**Por que escolhi:**
-- **Legibilidade:** `@/components/Button` em vez de `../../../components/Button`
-- **Refatoração:** Mais fácil mover arquivos sem quebrar imports
-- **Padronização:** Todo mundo usa os mesmos aliases
-- **DX:** Menos erros em paths relativos
-
-**Aliases configurados:**
-```typescript
-{
-  "@": "./src",
-  "@components": "./src/components",
-  "@utils": "./src/utils",
-  "@hooks": "./src/hooks",
-  "@assets": "./src/assets",
-  "@types": "./src/types"
+**Configuração de tema:**
+
+```css
+/* src/index.css */
+@import 'tailwindcss';
+
+@theme {
+  /* Defina suas cores, fontes e breakpoints customizados aqui */
+  --color-primary-600: #3b82f6;
 }
 ```
 
 ---
 
+### pnpm 9
+
+**Para que serve:** Gerenciador de pacotes.
+
+**Por que foi escolhido:**
+
+- **Velocidade:** 2-3x mais rápido que npm em instalações
+- **Espaço em disco:** Hard links — pacotes não são duplicados entre projetos
+- **Segurança:** Evita dependências fantasma (acesso apenas ao que está declarado)
+- **Lockfile confiável:** `pnpm-lock.yaml` mais determinístico
+- **Engines no package.json:** Bloqueia uso de npm acidentalmente
+
+**Versão:** 9.x (lockfile version 9)
+
+---
+
+## Qualidade de Código
+
+### Husky 9
+
+**Para que serve:** Gerencia Git hooks para automatizar verificações.
+
+**Hooks configurados:**
+
+**`pre-commit`:**
+
+1. `pnpm exec lint-staged` — lint e formatação nos arquivos modificados
+2. `pnpm run type-check` — verifica tipos TypeScript em todo o projeto
+
+**`pre-push`:**
+
+1. `pnpm run test` — executa todos os testes unitários
+
+Se qualquer hook falhar, a operação Git é bloqueada.
+
+---
+
+### ESLint 9
+
+**Para que serve:** Linting para identificar e corrigir problemas no código.
+
+**Por que foi escolhido:**
+
+- **Detecção proativa:** Encontra bugs e problemas antes de chegarem em produção
+- **10+ plugins:** Cobertura de TypeScript, React, acessibilidade, segurança, qualidade
+- **Zero warnings:** `--max-warnings 0` — não existe "warning ignorável"
+- **Três contextos:** Regras diferentes para código fonte, testes unitários e testes E2E
+
+Consulte os plugins ativos em [README.md — Qualidade de Código](../README.md#qualidade-de-código).
+
+---
+
+### Prettier 3
+
+**Para que serve:** Formatador de código opinativo.
+
+**Por que foi escolhido:**
+
+- **Consistência absoluta:** Um formato, sem debate
+- **Automático:** Formata no commit via lint-staged
+- **Integrado ao ESLint:** `eslint-config-prettier` desabilita regras de formatação do ESLint que conflitam
+- **Dois plugins extras:** `sort-imports` para ordenação de imports, `prettier-plugin-tailwindcss` para ordenação de classes
+
+---
+
+### lint-staged
+
+**Para que serve:** Roda linting apenas nos arquivos modificados antes do commit.
+
+**Por que foi escolhido:**
+
+- **Velocidade:** Não precisa verificar o projeto inteiro a cada commit
+- **Foco:** Garante que apenas código limpo entre no staging area
+
+**Configuração (`.lintstagedrc.json`):**
+
+```json
+{
+  "*.{js,jsx,ts,tsx}": ["eslint --fix", "prettier --write"],
+  "*.{json,md,mdx,css,html,yml,yaml}": ["prettier --write"]
+}
+```
+
+---
+
+## Testes
+
+### Vitest 4
+
+**Para que serve:** Framework de testes unitários e de integração.
+
+**Por que foi escolhido:**
+
+- **Velocidade:** Usa o mesmo pipeline do Vite — TypeScript e aliases funcionam sem config extra
+- **API Jest-compatível:** Migração de projetos Jest é trivial
+- **Coverage nativo:** `@vitest/coverage-v8` com thresholds configurados
+- **UI mode:** Interface visual no browser para debug (`pnpm test:ui`)
+- **Watch inteligente:** Reexecuta apenas testes afetados pela mudança
+
+**Thresholds de cobertura (mínimo 80%):**
+
+```typescript
+thresholds: {
+  global: {
+    branches: 80,
+    functions: 80,
+    lines: 80,
+    statements: 80,
+  },
+},
+```
+
+**Excluídos da cobertura:** `src/test/`, `src/main.tsx`, `src/types/`, arquivos de teste
+
+---
+
+### Playwright 1
+
+**Para que serve:** Framework de testes end-to-end.
+
+**Por que foi escolhido:**
+
+- **Multi-browser real:** Chromium, WebKit e Mobile — sem emulação de comportamento
+- **Confiável:** Auto-waiting elimina `sleep()` nos testes
+- **Developer Experience:** Trace viewer, screenshot/video em falhas, code generator
+- **Execução paralela:** Por padrão em desenvolvimento (sequencial em CI)
+- **Melhor que Cypress:** Suporte a múltiplas abas, iframes, melhor suporte a CI/CD
+
+**4 browsers configurados:** Desktop Chrome, Desktop Safari, Pixel 5 (Chrome), iPhone 12 (Safari)
+
+---
+
+### @axe-core/playwright
+
+**Para que serve:** Motor de acessibilidade automatizada integrado ao Playwright.
+
+**Por que foi escolhido:**
+
+- **Padrão da indústria:** Motor usado pelo Deque Systems, líder em acessibilidade
+- **Cobertura ampla:** Detecta ~57% de todas as violações de acessibilidade automaticamente
+- **WCAG 2.1 completo:** Cobre todos os 4 princípios (Perceptível, Operável, Compreensível, Robusto)
+- **Relatórios detalhados:** Elemento exato + regra violada + link para documentação
+
+---
+
+## Monitoramento e Performance
+
+### Sentry
+
+**Para que serve:** Error tracking e performance monitoring em produção.
+
+**Por que foi escolhido:**
+
+- **Source maps:** Mostra código original, não minificado — linha exata do erro
+- **Release tracking:** Correlaciona erros com deploys específicos
+- **Session Replay:** Vê exatamente o que o usuário fez antes do erro
+- **Filtros inteligentes:** Remove ruído de extensões e scripts externos
+- **Ativo apenas em produção:** Não polui desenvolvimento com erros esperados
+
+**Inicialização condicional:**
+
+```typescript
+// src/main.tsx
+if (import.meta.env.PROD) {
+  initSentry()
+}
+```
+
+---
+
+### web-vitals
+
+**Para que serve:** Coleta Core Web Vitals em browsers reais (Real User Monitoring).
+
+**Por que foi escolhido:**
+
+- **Biblioteca oficial do Google:** Mantida pela equipe que define os critérios de Core Web Vitals
+- **Métricas de ranking:** Google usa LCP, INP e CLS como critério de SEO
+- **Dados reais:** Mede o que o usuário real experimenta, não simulação de laboratório
+- **Integração flexível:** Funciona com Google Analytics, Sentry ou qualquer endpoint
+
+**Métricas coletadas:** LCP, INP, CLS, FCP, TTFB
+
+---
+
+### Lighthouse CI
+
+**Para que serve:** Auditorias automatizadas de qualidade em CI/CD.
+
+**Por que foi escolhido:**
+
+- **5 categorias:** Performance, Acessibilidade, Boas Práticas, SEO e PWA
+- **Histórico:** Compara scores entre deploys para detectar regressões
+- **Padrão do Google:** As mesmas métricas usadas para ranking no Google Search
+- **Fácil integração:** Plugin `@lhci/cli` rodando com `pnpm lighthouse`
+
+---
+
+## Build e Otimização
+
+### Code Splitting Manual
+
+```typescript
+// vite.config.ts
+manualChunks: {
+  'vendor-react': ['react', 'react-dom'],  // raramente muda → cache longo
+  'vendor-sentry': ['@sentry/react'],      // separado para não poluir o bundle principal
+}
+```
+
+**Por que separar React e Sentry:**
+
+- `vendor-react` tem hash que muda raramente — navegador cacheia por meses
+- `vendor-sentry` é grande (~200KB) — separado para não impactar o tempo de carregamento inicial quando o Sentry não é crítico
+- Cada componente `React.lazy()` vira automaticamente seu próprio chunk
+
+### rollup-plugin-visualizer
+
+**Para que serve:** Análise visual da composição e tamanho do bundle.
+
+**Uso:**
+
+```bash
+pnpm build:analyze
+# Abre dist/stats.html com gráfico treemap/sunburst
+# Mostra tamanho gzip e brotli de cada módulo
+```
+
+**Quando usar:** Antes de otimizações, ao adicionar dependências pesadas, para verificar se tree-shaking está funcionando.
+
+### Source maps em produção
+
+```typescript
+// vite.config.ts
+build: {
+  sourcemap: process.env.NODE_ENV === 'production' ? 'hidden' : false,
+}
+```
+
+`'hidden'`: gera os arquivos `.map` mas não os referencia no JS — o Sentry faz o upload e eles são deletados após. Sem exposição de código fonte.
+
+---
+
 ## Princípios da Arquitetura
 
-### 1. Performance First
-Todas as escolhas priorizam velocidade de carregamento e interatividade.
+### 1. Produção por padrão
 
-### 2. Developer Experience
-Ferramentas que aceleram desenvolvimento e reduzem bugs.
+Sentry, Web Vitals e source maps só ativam em `import.meta.env.PROD`. Zero ruído durante desenvolvimento.
 
-### 3. Escalabilidade
-Stack preparada para crescer de landing page a aplicações complexas.
+### 2. Type safety em todo lugar
 
-### 4. Manutenibilidade
-Código limpo, testado e bem documentado para facilitar manutenção.
+TypeScript strict em todo o código. Três tsconfigs com escopos claros. ESLint com TypeScript-aware rules. Nenhum `any` sem justificativa.
 
-### 5. Padrões Modernos
-Tecnologias atualizadas e com suporte ativo da comunidade.
+### 3. Acessibilidade não é opcional
 
-### 6. Type Safety
-TypeScript em todo lugar para prevenir erros em runtime.
+ESLint com `jsx-a11y`, componentes acessíveis pré-construídos, testes automatizados WCAG. WCAG 2.1 AA é o mínimo, não o objetivo.
 
----
+### 4. Testes como contrato
 
-## Próximos Passos
+Threshold de 80% obrigatório. Cobertura mede o que foi testado, não o que funciona — mas sem ela, não há confiança de deploy. Pre-push bloqueia código sem testes.
 
-Conforme o projeto escala, considerar adicionar:
+### 5. Qualidade no commit, não no PR
 
-- **State Management:** Zustand ou TanStack Query para estado global
-- **Acessibilidade:** `eslint-plugin-jsx-a11y` + `@axe-core/playwright`
-- **Autenticação:** Clerk, Auth0 ou solução custom
-- **API Client:** TanStack Query para gerenciamento de cache e requisições
-- **Componentes:** Radix UI ou shadcn/ui para componentes acessíveis
-- **Imagens:** `vite-plugin-image-optimizer` para otimização automática
-- **i18n:** `react-i18next` se precisar de múltiplos idiomas
-- **Analytics:** Plausible ou Google Analytics 4
+lint-staged + type-check no pre-commit garantem que código mal formatado ou com erros de tipo nunca chega ao repositório.
+
+### 6. Separação clara de contextos
+
+Código fonte, testes unitários e testes E2E têm configs de TypeScript e ESLint separadas. Regras de teste não vazam para o código de produção.
 
 ---
 
-## Recursos e Documentação
+## Próximos Passos (ao escalar)
+
+Ao crescer além de um SPA simples, considerar:
+
+| Necessidade               | Solução recomendada                                                   |
+| ------------------------- | --------------------------------------------------------------------- |
+| **Roteamento**            | TanStack Router — type-safe, code splitting automático                |
+| **Estado global**         | Zustand (estado simples) ou TanStack Query (estado de servidor)       |
+| **Autenticação**          | Better Auth — ver [docs/BETTER-AUTH-GUIDE.md](./BETTER-AUTH-GUIDE.md) |
+| **Componentes UI**        | shadcn/ui (baseado em Radix UI) — acessível por padrão                |
+| **Formulários**           | React Hook Form + Zod para validação type-safe                        |
+| **API Client**            | TanStack Query para cache, refetch, loading states                    |
+| **Imagens**               | `vite-plugin-image-optimizer` para AVIF/WebP automático               |
+| **i18n**                  | `react-i18next` para múltiplos idiomas                                |
+| **Testes de componentes** | Storybook para documentação e testes visuais                          |
+| **Analytics**             | Plausible (privacidade) ou Google Analytics 4                         |
+
+---
+
+## Recursos e Documentação Oficial
 
 - [React 19 Docs](https://react.dev)
 - [Vite Documentation](https://vitejs.dev)
 - [TypeScript Handbook](https://www.typescriptlang.org/docs/)
-- [Tailwind CSS](https://tailwindcss.com)
-- [TanStack Router](https://tanstack.com/router)
+- [Tailwind CSS v4](https://tailwindcss.com)
 - [Vitest Guide](https://vitest.dev)
 - [Playwright Docs](https://playwright.dev)
-- [Sentry Docs](https://docs.sentry.io)
+- [Sentry React SDK](https://docs.sentry.io/platforms/javascript/guides/react/)
 - [Web Vitals](https://web.dev/vitals/)
-
----
-
-**Última atualização:** Janeiro 2025
-**Mantenedor:** [Seu Nome]
-**Versão do Template:** 1.0.0
+- [WCAG 2.1](https://www.w3.org/WAI/WCAG21/quickref/)

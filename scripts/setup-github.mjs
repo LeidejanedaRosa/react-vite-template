@@ -80,6 +80,22 @@ function describeError(error) {
   }
 }
 
+// Recusas que significam "este recurso não existe para este repositório" (ex.: secret
+// scanning e CodeQL em repositório privado sem Advanced Security). Qualquer outro erro,
+// como conflito ou serviço indisponível, é falha de verdade.
+const NOT_APPLICABLE_STATUS = [403, 422]
+const NOT_APPLICABLE_MESSAGE =
+  /advanced security|not available|not supported|not enabled|no supported languages/i
+
+function isNotApplicable(error) {
+  const status = Number(/\(HTTP (\d{3})\)/.exec(`${error.stderr ?? ''}`)?.[1])
+
+  return (
+    NOT_APPLICABLE_STATUS.includes(status) &&
+    NOT_APPLICABLE_MESSAGE.test(describeError(error))
+  )
+}
+
 const failures = []
 
 function step(label, action, { required = false } = {}) {
@@ -87,8 +103,10 @@ function step(label, action, { required = false } = {}) {
     action()
     console.log(`  ✓ ${label}`)
   } catch (error) {
-    console.log(`  ${required ? '✗' : '–'} ${label}: ${describeError(error)}`)
-    if (required) failures.push(label)
+    const skipped = !required && isNotApplicable(error)
+
+    console.log(`  ${skipped ? '–' : '✗'} ${label}: ${describeError(error)}`)
+    if (!skipped) failures.push(label)
   }
 }
 
@@ -137,9 +155,10 @@ function buildRuleset() {
 }
 
 function upsertRuleset() {
-  const existing = gh('GET', 'rulesets').find(
-    ruleset => ruleset.name === RULESET_NAME
-  )
+  const existing = gh(
+    'GET',
+    'rulesets?includes_parents=false&targets=branch'
+  ).find(ruleset => ruleset.name === RULESET_NAME)
 
   if (existing) {
     gh('PUT', `rulesets/${existing.id}`, buildRuleset())

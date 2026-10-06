@@ -387,15 +387,15 @@ Acesse `http://localhost:5173`.
 
 O script `scripts/setup-github.mjs` aplica, em um comando, a configuração padrão do GitHub:
 
-| O que configura                                    | Efeito                                                         |
-| -------------------------------------------------- | -------------------------------------------------------------- |
-| Proteção da branch padrão (e das que você indicar) | Sem push direto, sem apagar a branch, sem reescrever histórico |
-| Merge só por merge commit                          | Os commits de cada PR continuam visíveis no histórico          |
-| Verificações obrigatórias                          | O botão de merge só libera com o CI verde                      |
-| Branch apagada após o merge                        | A lista de branches não acumula                                |
-| Dependabot                                         | Alertas de vulnerabilidade e PRs de correção                   |
-| Secret scanning com bloqueio no push               | Chave ou token não chega ao repositório                        |
-| CodeQL                                             | Análise de segurança do código                                 |
+| O que configura                                    | Efeito                                                           |
+| -------------------------------------------------- | ---------------------------------------------------------------- |
+| Proteção da branch padrão (e das que você indicar) | Sem push direto, sem apagar a branch, sem reescrever histórico   |
+| Merge só por merge commit                          | Os commits de cada PR continuam visíveis no histórico            |
+| Verificações obrigatórias (só com `--check`)       | O merge só libera quando todas as verificações informadas passam |
+| Branch apagada após o merge                        | A lista de branches não acumula                                  |
+| Dependabot                                         | Alertas de vulnerabilidade e PRs de correção                     |
+| Secret scanning com bloqueio no push               | Chave ou token não chega ao repositório                          |
+| CodeQL                                             | Análise de segurança do código                                   |
 
 Requer o [GitHub CLI](https://cli.github.com/) autenticado com um token de escopo `repo`.
 

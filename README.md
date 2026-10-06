@@ -381,6 +381,41 @@ Acesse `http://localhost:5173`.
 5. **`public/sitemap.xml`** — atualizar URL e datas
 6. **`.env.local`** — configurar `VITE_SENTRY_DSN` se usar Sentry
 7. **`src/App.tsx`** — substituir pelo componente raiz do projeto real
+8. **GitHub** — depois de criar o repositório remoto, aplicar o padrão de configuração (seção abaixo)
+
+### Configurando o repositório no GitHub
+
+O script `scripts/setup-github.mjs` aplica, em um comando, a configuração padrão do GitHub:
+
+| O que configura                                    | Efeito                                                           |
+| -------------------------------------------------- | ---------------------------------------------------------------- |
+| Proteção da branch padrão (e das que você indicar) | Sem push direto, sem apagar a branch, sem reescrever histórico   |
+| Merge só por merge commit                          | Os commits de cada PR continuam visíveis no histórico            |
+| Verificações obrigatórias (só com `--check`)       | O merge só libera quando todas as verificações informadas passam |
+| Branch apagada após o merge                        | A lista de branches não acumula                                  |
+| Dependabot                                         | Alertas de vulnerabilidade e PRs de correção                     |
+| Secret scanning com bloqueio no push               | Chave ou token não chega ao repositório                          |
+| CodeQL                                             | Análise de segurança do código                                   |
+
+Requer o [GitHub CLI](https://cli.github.com/) autenticado com um token de escopo `repo`.
+
+```bash
+# Ver o que seria feito, sem alterar nada
+node scripts/setup-github.mjs seu-usuario/meu-projeto --dry-run
+
+# Aplicar, exigindo o CI e o deploy de preview antes do merge
+node scripts/setup-github.mjs seu-usuario/meu-projeto \
+  --check "nome do job de CI" \
+  --check "Vercel"
+
+# Proteger também uma branch de integração
+node scripts/setup-github.mjs seu-usuario/meu-projeto --branch develop --check "nome do job de CI"
+```
+
+Cada `--check` é o texto do campo `name:` de um job do workflow de CI. Sem nenhum `--check`, o
+merge não exige CI verde. O script pode ser rodado de novo a qualquer momento: ele atualiza a
+configuração existente em vez de duplicar. A proteção vale também para quem é dono do
+repositório; em caso de emergência, ela é desativada em **Settings → Rules**.
 
 ---
 

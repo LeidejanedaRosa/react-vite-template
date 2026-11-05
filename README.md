@@ -490,7 +490,7 @@ Copie `.env.example` para `.env.local` e preencha conforme necessário.
 | `SENTRY_AUTH_TOKEN`                        | CI/CD       | Token para upload de source maps no build                 |
 | `SENTRY_ORG`                               | CI/CD       | Slug da organização no Sentry                             |
 | `SENTRY_PROJECT`                           | CI/CD       | Nome do projeto no Sentry                                 |
-| `VITE_APP_VERSION`                         | CI/CD       | Versão da release para o Sentry                           |
+| `VITE_APP_VERSION`                         | Não         | Release do Sentry. Padrão: commit do deploy (Vercel)      |
 | `PLAYWRIGHT_BASE_URL`                      | Não         | URL base para testes E2E. Padrão: `http://localhost:5173` |
 
 ---

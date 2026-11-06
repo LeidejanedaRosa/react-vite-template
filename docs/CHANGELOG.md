@@ -7,7 +7,15 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### 🐛 Corrigido
+
+- Release do Sentry usa o commit do deploy (`VERCEL_GIT_COMMIT_SHA`) quando `VITE_APP_VERSION` não existe — a Vercel não expande `$VAR` dentro de outra variável, e o texto literal virava o nome da release
+- `VITE_APP_VERSION` com referência `$VAR`/`${VAR}` não expandida é ignorada, e a release cai para o commit
+- Builds de preview da Vercel não criam release nem enviam source maps (um por PR, inclusive Dependabot)
+- Source maps só são gerados quando vão ser enviados ao Sentry, para um build sem Sentry não publicar os `.map`
+
 ### 🎯 Planejado
+
 - Adicionar integração com Storybook
 - Adicionar testes de integração com MSW
 - Adicionar exemplo de autenticação com OAuth
@@ -24,6 +32,7 @@ Template base completo e pronto para uso em produção.
 ### ✨ Adicionado
 
 #### Core Stack
+
 - React 19 com suporte nativo a meta tags
 - Vite 5 como build tool
 - TypeScript 5 com strict mode
@@ -31,6 +40,7 @@ Template base completo e pronto para uso em produção.
 - TanStack Router para roteamento type-safe
 
 #### Qualidade de Código
+
 - ESLint configurado com regras para React, TypeScript e acessibilidade
 - Prettier para formatação automática
 - Husky com git hooks (pre-commit e pre-push)
@@ -38,24 +48,28 @@ Template base completo e pronto para uso em produção.
 - Path aliases configurados (`@/`, `@components/`, etc)
 
 #### Testes
+
 - Vitest configurado para testes unitários e de integração
 - Playwright configurado para testes E2E
 - Testing Library para testes de componentes React
 - Exemplo de testes de acessibilidade com @axe-core/playwright
 
 #### Monitoramento e Performance
+
 - Sentry configurado para error tracking e performance monitoring
 - Core Web Vitals tracking (LCP, INP, CLS)
 - Lighthouse CI setup
 - rollup-plugin-visualizer para análise de bundle
 
 #### Infraestrutura
+
 - Headers de segurança configurados (Vercel e Netlify)
 - Configuração de variáveis de ambiente (.env.example)
 - Scripts npm organizados e documentados
 - Dockerfile para containerização (opcional)
 
 #### Documentação
+
 - ARCHITECTURE.md - Detalhamento de cada tecnologia e justificativas
 - SETUP-GUIDE.md - Guia completo de instalação e configuração
 - FOLDER-STRUCTURE.md - Estrutura de pastas feature-based
@@ -64,11 +78,13 @@ Template base completo e pronto para uso em produção.
 - Comentários inline em configs importantes
 
 #### Acessibilidade
+
 - eslint-plugin-jsx-a11y configurado
 - Testes automatizados de acessibilidade
 - Checklist de a11y no guia de contribuição
 
 #### SEO
+
 - Meta tags configuradas com React 19
 - robots.txt e sitemap.xml templates
 - Structured data (Schema.org) examples
@@ -113,6 +129,7 @@ Este template segue [Semantic Versioning](https://semver.org/lang/pt-BR/):
 ### Quando Atualizar
 
 **Atualize o changelog:**
+
 - ✅ Sempre que adicionar/remover dependências importantes
 - ✅ Quando mudar configurações que afetam comportamento
 - ✅ Ao adicionar/remover features ou ferramentas
@@ -121,6 +138,7 @@ Este template segue [Semantic Versioning](https://semver.org/lang/pt-BR/):
 - ✅ Quando atualizar documentação significativamente
 
 **Não precisa atualizar para:**
+
 - ❌ Atualizações patch de dependências que não afetam comportamento
 - ❌ Typos muito pequenos
 - ❌ Mudanças em comentários de código
@@ -134,26 +152,32 @@ Este template segue [Semantic Versioning](https://semver.org/lang/pt-BR/):
 ## [X.Y.Z] - YYYY-MM-DD
 
 ### ✨ Adicionado
+
 - Descrição do que foi adicionado
 - Outra funcionalidade nova
 
 ### 🔄 Modificado
+
 - Descrição do que mudou
 - Impacto da mudança
 
 ### 🐛 Corrigido
+
 - Bug que foi corrigido
 - Descrição da solução
 
 ### 🗑️ Removido
+
 - O que foi removido
 - Razão da remoção
 
 ### 🔒 Segurança
+
 - Vulnerabilidade corrigida
 - CVE reference (se aplicável)
 
 ### ⚠️ Breaking Changes
+
 **IMPORTANTE:** Esta versão contém mudanças incompatíveis.
 
 - Descrição detalhada da mudança
@@ -161,7 +185,9 @@ Este template segue [Semantic Versioning](https://semver.org/lang/pt-BR/):
 - Exemplo de código antes/depois
 
 ### 📝 Notas de Migração
+
 Se você está atualizando de versão anterior:
+
 1. Passo 1 da migração
 2. Passo 2 da migração
 3. ...
@@ -177,6 +203,7 @@ Se você está atualizando de versão anterior:
 ## [1.1.0] - 2025-02-15
 
 ### ✨ Adicionado
+
 - **Storybook:** Configuração completa para documentação de componentes
   - Plugins: a11y, viewport, controls
   - Stories para todos os componentes UI
@@ -187,13 +214,14 @@ Se você está atualizando de versão anterior:
   - Integração com Vitest e Playwright
 
 ### 🔄 Modificado
+
 - **Estrutura de pastas:** Adicionado diretório `.storybook/` na raiz
 - **package.json:** Novos scripts para Storybook
 ```
 
 ### Exemplo: Breaking Change (Major)
 
-```markdown
+````markdown
 ## [2.0.0] - 2025-03-01
 
 ### ⚠️ Breaking Changes
@@ -205,6 +233,7 @@ Se você está atualizando de versão anterior:
 - Plugins agora são importados de forma diferente
 
 **Como migrar:**
+
 1. Atualize `tailwind.config.js` seguindo novo formato
 2. Substitua classes antigas:
    - `overflow-clip` → `overflow-hidden`
@@ -212,6 +241,7 @@ Se você está atualizando de versão anterior:
 3. Reinstale dependências: `pnpm install`
 
 **Exemplo de código:**
+
 ```diff
 // tailwind.config.js
 - module.exports = {
@@ -222,14 +252,18 @@ Se você está atualizando de versão anterior:
 +   plugins: ['@tailwindcss/forms'],
   }
 ```
+````
 
 ### 🔄 Modificado
+
 - **Tailwind CSS:** v4.0.0 → v5.0.0
 - **PostCSS:** Atualizado para compatibilidade com Tailwind 5
 
 ### 🗑️ Removido
+
 - Suporte para Tailwind 3.x
-```
+
+````
 
 ### Exemplo: Bug Fix (Patch)
 
@@ -250,7 +284,7 @@ Se você está atualizando de versão anterior:
   - `vite`: 5.0.10 → 5.0.12
   - `vitest`: 1.2.0 → 1.2.1
   - `prettier`: 3.2.0 → 3.2.4
-```
+````
 
 ### Exemplo: Segurança (Patch)
 
@@ -258,6 +292,7 @@ Se você está atualizando de versão anterior:
 ## [1.0.2] - 2025-01-25
 
 ### 🔒 Segurança
+
 - **vite:** Corrigida vulnerabilidade CVE-2024-XXXXX
   - Atualizado de 5.0.12 → 5.0.13
   - Severidade: Média
@@ -267,6 +302,7 @@ Se você está atualizando de versão anterior:
   - Configurado em `vercel.json` e `netlify.toml`
 
 ### 🔄 Modificado
+
 - **Sentry:** Melhorada filtragem de erros sensíveis
   - Eventos com senhas/tokens são automaticamente sanitizados
 ```

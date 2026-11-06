@@ -5,26 +5,27 @@ import path from 'path'
 import { visualizer } from 'rollup-plugin-visualizer'
 import { defineConfig } from 'vite'
 
+import { resolveSentryBuild } from './src/lib/sentryBuild'
+
+const sentryBuild = resolveSentryBuild(process.env)
+
 export default defineConfig({
   plugins: [
     tailwindcss(),
     react(),
-    ...(process.env.NODE_ENV === 'production' &&
-    process.env.SENTRY_AUTH_TOKEN &&
-    process.env.SENTRY_ORG &&
-    process.env.SENTRY_PROJECT
+    ...(sentryBuild
       ? [
           sentryVitePlugin({
-            org: process.env.SENTRY_ORG,
-            project: process.env.SENTRY_PROJECT,
-            authToken: process.env.SENTRY_AUTH_TOKEN,
+            org: sentryBuild.org,
+            project: sentryBuild.project,
+            authToken: sentryBuild.authToken,
             sourcemaps: {
               assets: './dist/**',
               ignore: ['node_modules'],
               filesToDeleteAfterUpload: ['./dist/**/*.map'],
             },
             release: {
-              name: process.env.VITE_APP_VERSION,
+              name: sentryBuild.release,
               setCommits: { auto: true, ignoreMissing: true },
             },
             telemetry: false,
@@ -60,7 +61,9 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     target: 'es2022',
-    sourcemap: process.env.NODE_ENV === 'production' ? 'hidden' : false,
+    // Gerados só quando vão ser enviados: o plugin apaga os .map depois do upload, então um
+    // build sem Sentry publicaria esses arquivos.
+    sourcemap: sentryBuild ? 'hidden' : false,
     cssCodeSplit: true,
     rollupOptions: {
       output: {

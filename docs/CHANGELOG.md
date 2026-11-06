@@ -10,6 +10,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 ### 🐛 Corrigido
 
 - Release do Sentry usa o commit do deploy (`VERCEL_GIT_COMMIT_SHA`) quando `VITE_APP_VERSION` não existe — a Vercel não expande `$VAR` dentro de outra variável, e o texto literal virava o nome da release
+- `VITE_APP_VERSION` com referência `$VAR`/`${VAR}` não expandida é ignorada, e a release cai para o commit
 - Builds de preview da Vercel não criam release nem enviam source maps (um por PR, inclusive Dependabot)
 - Source maps só são gerados quando vão ser enviados ao Sentry, para um build sem Sentry não publicar os `.map`
 

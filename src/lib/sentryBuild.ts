@@ -18,6 +18,16 @@ export interface SentryBuildConfig {
   release?: string
 }
 
+// A Vercel não expande `$VAR` dentro do valor de outra variável: VITE_APP_VERSION cadastrada como
+// "$VERCEL_GIT_COMMIT_SHA" virava esse texto literal no nome da release.
+const UNEXPANDED_REFERENCE = /^\${?\w+}?$/
+
+function explicitVersion(value: string | undefined): string | undefined {
+  const version = value?.trim()
+  if (!version || UNEXPANDED_REFERENCE.test(version)) return undefined
+  return version
+}
+
 /**
  * Configuração de release do Sentry para este build, ou `null` quando o build não deve criar
  * release nem enviar source maps.
@@ -38,10 +48,10 @@ export function resolveSentryBuild(
   } = env
   if (!authToken || !org || !project) return null
 
-  // A Vercel não expande `$VAR` dentro do valor de outra variável: VITE_APP_VERSION cadastrada
-  // como "$VERCEL_GIT_COMMIT_SHA" virava esse texto literal no nome da release.
   const release =
-    env.VITE_APP_VERSION?.trim() || env.VERCEL_GIT_COMMIT_SHA || undefined
+    explicitVersion(env.VITE_APP_VERSION) ||
+    env.VERCEL_GIT_COMMIT_SHA ||
+    undefined
 
   return { org, project, authToken, release }
 }

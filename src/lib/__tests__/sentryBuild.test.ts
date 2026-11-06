@@ -71,6 +71,23 @@ describe('resolveSentryBuild', () => {
     ).toBe('abc123')
   })
 
+  it.each([
+    '$VERCEL_GIT_COMMIT_SHA',
+    '${VERCEL_GIT_COMMIT_SHA}',
+    ' $npm_package_version ',
+  ])(
+    'ignora VITE_APP_VERSION com referência não expandida (%s) e usa o commit',
+    unexpanded => {
+      expect(
+        resolveSentryBuild({
+          ...productionBuild,
+          VITE_APP_VERSION: unexpanded,
+          VERCEL_GIT_COMMIT_SHA: 'abc123',
+        })?.release
+      ).toBe('abc123')
+    }
+  )
+
   it('deixa a release indefinida para o plugin detectar pelo git', () => {
     const config = resolveSentryBuild(productionBuild)
 

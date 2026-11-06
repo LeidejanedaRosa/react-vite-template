@@ -205,14 +205,16 @@ Consulte os plugins ativos em [README.md — Qualidade de Código](../README.md#
 
 ```typescript
 thresholds: {
-  global: {
-    branches: 80,
-    functions: 80,
-    lines: 80,
-    statements: 80,
-  },
+  branches: 80,
+  functions: 80,
+  lines: 80,
+  statements: 80,
 },
 ```
+
+As métricas ficam direto em `thresholds`. O formato `thresholds: { global: { ... } }` vem do Jest: no
+Vitest, qualquer outra chave é lida como glob de arquivos, e `global` não casa com nenhum — o limite
+deixa de ser cobrado, sem erro nem aviso.
 
 **Excluídos da cobertura:** `src/test/`, `src/main.tsx`, `src/types/`, arquivos de teste
 

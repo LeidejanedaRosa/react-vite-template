@@ -395,7 +395,7 @@ O script `scripts/setup-github.mjs` aplica, em um comando, a configuração padr
 | Branch apagada após o merge                        | A lista de branches não acumula                                  |
 | Dependabot                                         | Alertas de vulnerabilidade e PRs de correção                     |
 | Secret scanning com bloqueio no push               | Chave ou token não chega ao repositório                          |
-| CodeQL                                             | Análise de segurança do código                                   |
+| CodeQL                                             | Análise de segurança das linguagens que existem no repositório   |
 
 Requer o [GitHub CLI](https://cli.github.com/) autenticado com um token de escopo `repo`.
 
@@ -416,6 +416,13 @@ Cada `--check` é o texto do campo `name:` de um job do workflow de CI. Sem nenh
 merge não exige CI verde. O script pode ser rodado de novo a qualquer momento: ele atualiza a
 configuração existente em vez de duplicar. A proteção vale também para quem é dono do
 repositório; em caso de emergência, ela é desativada em **Settings → Rules**.
+
+O CodeQL é ligado com a lista explícita das linguagens que existem no repositório naquele momento
+(as do GitHub e `actions`, se houver workflows). Sem nenhuma, o passo aparece como "–". Se o
+CodeQL ficou ligado para algo que saiu do repositório — por exemplo, o único workflow foi
+apagado —, a análise passa a falhar em todo PR; o script avisa, mas não desliga sozinho:
+desligar recurso de segurança fica como decisão de quem cuida do repositório. Rode o script de
+novo sempre que uma linguagem entrar ou sair.
 
 ---
 

@@ -6,6 +6,11 @@
 import { execFileSync } from 'node:child_process'
 import { parseArgs } from 'node:util'
 
+import {
+  codeqlLanguages,
+  staleCodeqlLanguages,
+} from './lib/codeql-languages.mjs'
+
 const RULESET_NAME = 'Proteger branches de integração'
 
 const HELP = `
@@ -97,10 +102,15 @@ function isNotApplicable(error) {
 }
 
 const failures = []
+const warnings = []
 
 function step(label, action, { required = false } = {}) {
   try {
-    action()
+    const result = action()
+    if (result?.skipped) {
+      console.log(`  – ${label}: ${result.skipped}`)
+      return
+    }
     console.log(`  ✓ ${label}`)
   } catch (error) {
     const skipped = !required && isNotApplicable(error)
@@ -108,6 +118,41 @@ function step(label, action, { required = false } = {}) {
     console.log(`  ${skipped ? '–' : '✗'} ${label}: ${describeError(error)}`)
     if (!skipped) failures.push(label)
   }
+}
+
+function hasWorkflows() {
+  try {
+    return gh('GET', 'contents/.github/workflows').length > 0
+  } catch (error) {
+    if (/\(HTTP 404\)/.test(`${error.stderr ?? ''}`)) return false
+    throw error
+  }
+}
+
+// Configura o CodeQL com a lista explícita de linguagens que existem hoje no repositório. Se
+// não houver nada a analisar e ele ainda estiver ligado (ex.: o único workflow foi removido),
+// só avisa: desligar recurso de segurança fica como decisão de quem cuida do repositório.
+function configureCodeql() {
+  const languages = codeqlLanguages(gh('GET', 'languages'), hasWorkflows())
+
+  if (languages.length > 0) {
+    gh('PATCH', 'code-scanning/default-setup', {
+      state: 'configured',
+      languages,
+    })
+    return null
+  }
+
+  const current = gh('GET', 'code-scanning/default-setup')
+  const stale = staleCodeqlLanguages(current.languages ?? [], languages)
+  if (current.state === 'configured' && stale.length > 0) {
+    warnings.push(
+      `CodeQL continua ligado para ${stale.join(', ')}, mas o repositório não tem mais esse ` +
+        'código — a análise vai falhar em todo PR. Desligue em Settings → Code security → ' +
+        'CodeQL analysis → "Disable CodeQL".'
+    )
+  }
+  return { skipped: 'nenhuma linguagem que o CodeQL analisa' }
 }
 
 function buildRuleset() {
@@ -206,9 +251,11 @@ if (failures.length === 0) {
       },
     })
   )
-  step('CodeQL (configuração padrão)', () =>
-    gh('PATCH', 'code-scanning/default-setup', { state: 'configured' })
-  )
+  step('CodeQL (configuração padrão)', configureCodeql)
+}
+
+for (const warning of warnings) {
+  console.log(`\n  Aviso: ${warning}`)
 }
 
 if (options.check.length === 0) {

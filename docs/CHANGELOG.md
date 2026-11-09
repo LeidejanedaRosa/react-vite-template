@@ -7,6 +7,10 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### ✨ Adicionado
+
+- `setup-github.mjs` liga o CodeQL só com as linguagens que existem no repositório (lista explícita) e avisa quando ele ficou ligado para uma linguagem que saiu — caso real: o repositório do perfil perdeu o único workflow e a análise de `actions` passou a falhar em todo PR
+
 ### 🐛 Corrigido
 
 - Threshold de cobertura de 80% passa a ser cobrado de verdade: estava em `thresholds.global`, formato do Jest que o Vitest lê como glob de arquivos e ignora

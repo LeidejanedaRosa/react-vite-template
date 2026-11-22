@@ -40,10 +40,12 @@ playwright-report
 dist
 build
 *.tsbuildinfo
-*.config.d.ts
 
 # Misc
 .cache
 .turbo
 .vercel
 .netlify
+
+# Lighthouse CI
+.lighthouseci

@@ -9,6 +9,11 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ### ✨ Adicionado
 
+- CI no GitHub Actions (`.github/workflows/ci.yml`), quatro jobs em paralelo: qualidade (Prettier, ESLint, tipos, cobertura, SonarCloud opcional, build), dependências e segredos (`pnpm audit` e gitleaks com binário de sha256 fixo), E2E contra o build de produção e Lighthouse CI
+- `lighthouserc.json`: 90 em cada categoria; acessibilidade, boas práticas e SEO quebram o build, performance avisa
+- `sonar-project.properties`, com organização e chave derivadas do nome do repositório no CI
+- Firefox no Playwright; `.nvmrc` (Node 24); relatório de cobertura `lcov` para o SonarCloud
+- `pnpm format` e `pnpm format:check` cobrem o repositório inteiro, não só `src/`
 - `setup-github.mjs` liga o CodeQL só com as linguagens que existem no repositório (lista explícita) e avisa quando ele ficou ligado para uma linguagem que saiu — caso real: o repositório do perfil perdeu o único workflow e a análise de `actions` passou a falhar em todo PR
 
 ### 🔒 Segurança
@@ -20,6 +25,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ### 🐛 Corrigido
 
+- `tsc -b` deixava `src/lib/sentryBuild.d.ts` dentro de `src/` (o lint quebrava se rodasse depois do build): as declarações do `tsconfig.node.json` vão para `node_modules/.tmp`, e a regra `*.config.d.ts` saiu do `.gitignore`
 - Página inicial com os landmarks que faltavam (`header`, `nav`, `main`, `footer`): o link "Pular para o conteúdo principal" do `index.html` apontava para `#main-content`, que não existia (WCAG 2.4.1). `SiteHeader` e `SiteFooter` novos em `components/layout`; o `main` é o `MainContent` que já existia
 - Uma só `meta description`: o `App` também renderizava `<title>` e `<meta>` pelo React 19, duplicando o `index.html`. O `index.html` (que o buscador lê sem executar JavaScript) é a fonte, agora com título e descrição reais do template
 - Botões do hero quebram linha a 320px em vez de estourar a largura (WCAG 1.4.10 — Reflow); título do hero `text-4xl` no celular

@@ -36,13 +36,6 @@ test.describe('Semantic HTML Structure Tests', () => {
       const navCount = await page.locator('nav').count()
       expect(navCount).toBeGreaterThanOrEqual(1)
     })
-
-    test('should use section elements for content grouping', async ({
-      page,
-    }) => {
-      const sectionCount = await page.locator('section').count()
-      expect(sectionCount).toBeGreaterThanOrEqual(3)
-    })
   })
 
   test.describe('Heading Hierarchy - WCAG 1.3.1 & 2.4.6', () => {

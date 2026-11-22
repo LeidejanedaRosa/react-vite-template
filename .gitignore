@@ -46,3 +46,6 @@ build
 .turbo
 .vercel
 .netlify
+
+# Lighthouse CI
+.lighthouseci

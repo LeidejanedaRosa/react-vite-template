@@ -40,7 +40,6 @@ playwright-report
 dist
 build
 *.tsbuildinfo
-*.config.d.ts
 
 # Misc
 .cache

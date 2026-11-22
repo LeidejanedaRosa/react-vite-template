@@ -134,7 +134,7 @@ Documentação da stack tecnológica e decisões arquiteturais do template.
 
 **`pre-push`:**
 
-1. `pnpm run test` — executa todos os testes unitários
+1. `pnpm run test` — executa todos os testes unitários; pulado quando o push só apaga branches (`scripts/push-only-deletes.sh`)
 
 Se qualquer hook falhar, a operação Git é bloqueada.
 

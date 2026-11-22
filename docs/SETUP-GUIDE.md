@@ -385,16 +385,16 @@ echo "✅ Pre-commit verificações passaram!"
 Arquivo: `.husky/pre-push`
 
 ```bash
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
+if sh scripts/push-only-deletes.sh; then
+  echo "⏭️  O push só apaga branches: testes pulados."
+  exit 0
+fi
 
 echo "🧪 Rodando testes antes do push..."
 
-# Rodar testes
-pnpm run test
-
-if [ $? -ne 0 ]; then
+if ! pnpm run test; then
   echo "❌ Testes falharam. Push cancelado."
+  echo "💡 Corrija os testes e tente novamente."
   exit 1
 fi
 
@@ -403,8 +403,13 @@ echo "✅ Testes passaram! Continuando com push..."
 
 **O que faz:**
 
+- ⏭️ Pula os testes quando o push só apaga branches (`scripts/push-only-deletes.sh`)
 - ✅ Roda todos os testes antes de fazer push
 - ❌ Bloqueia push se algum teste falhar
+
+O Husky 9 roda o hook com `sh -e`: um comando que falha encerra o script na hora. Por isso a falha
+dos testes é tratada dentro do `if !` — um `if [ $? -ne 0 ]` na linha seguinte nunca chegaria a
+rodar.
 
 ### Configurar lint-staged
 

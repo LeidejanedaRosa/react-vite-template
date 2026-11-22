@@ -9,6 +9,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ### ✨ Adicionado
 
+- `.coderabbit.yaml`: revisão no perfil `chill` e em PRs para qualquer branch, inclusive as de integração (antes ficavam em "skipping")
 - pre-push pula os testes quando o push só apaga branches (`scripts/push-only-deletes.sh`, com testes); branch nova, push misto ou entrada estranha continuam rodando
 - Secret scan com `gitleaks git --staged` no pre-commit, antes do lint; sem o binário o commit falha com o link de instalação. O CI já varre o histórico inteiro
 - CI no GitHub Actions (`.github/workflows/ci.yml`), quatro jobs em paralelo: qualidade (Prettier, ESLint, tipos, cobertura, SonarCloud opcional, build), dependências e segredos (`pnpm audit` e gitleaks com binário de sha256 fixo), E2E contra o build de produção e Lighthouse CI

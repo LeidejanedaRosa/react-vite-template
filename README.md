@@ -306,7 +306,7 @@ react-vite-template/
 ├── .env.local                       # Variáveis locais (NÃO commitar)
 ├── .husky/
 │   ├── pre-commit                   # gitleaks + lint-staged + type-check
-│   └── pre-push                     # vitest run
+│   └── pre-push                     # vitest run (pulado se o push só apaga branches)
 ├── .lintstagedrc.json
 ├── .prettierrc
 ├── .prettierignore
@@ -912,12 +912,9 @@ Primeiro, `gitleaks git --staged` procura segredos (chave de API, token) no que 
 
 Após lint-staged, o hook executa `pnpm type-check` para garantir que tipos TypeScript estejam corretos.
 
-**`git push`** — executa todos os testes unitários:
+**`git push`** — executa todos os testes unitários; se falharem, o push é bloqueado com mensagem de erro.
 
-```bash
-pnpm run test
-# Se falhar → push é bloqueado com mensagem de erro
-```
+Quando o push só **apaga** branches (`git push --delete`), os testes são pulados: não há código novo indo para o remoto. O `scripts/push-only-deletes.sh` lê as refs que o Git manda ao hook e só pula quando **todas** são remoções (sha local só de zeros); branch nova, push misto ou entrada estranha rodam os testes.
 
 ---
 

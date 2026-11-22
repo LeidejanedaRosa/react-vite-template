@@ -9,6 +9,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ### ✨ Adicionado
 
+- pre-push pula os testes quando o push só apaga branches (`scripts/push-only-deletes.sh`, com testes); branch nova, push misto ou entrada estranha continuam rodando
 - Secret scan com `gitleaks git --staged` no pre-commit, antes do lint; sem o binário o commit falha com o link de instalação. O CI já varre o histórico inteiro
 - CI no GitHub Actions (`.github/workflows/ci.yml`), quatro jobs em paralelo: qualidade (Prettier, ESLint, tipos, cobertura, SonarCloud opcional, build), dependências e segredos (`pnpm audit` e gitleaks com binário de sha256 fixo), E2E contra o build de produção e Lighthouse CI
 - `lighthouserc.json`: 90 em cada categoria; acessibilidade, boas práticas e SEO quebram o build, performance avisa
@@ -26,6 +27,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ### 🐛 Corrigido
 
+- Mensagem "❌ Testes falharam" do pre-push nunca aparecia: com `sh -e` (Husky 9), o teste que falha encerra o hook antes do `if [ $? -ne 0 ]`. A falha agora é tratada no `if !`. O SETUP-GUIDE ainda mostrava os dois hooks no formato do Husky 8
 - `tsc -b` deixava `src/lib/sentryBuild.d.ts` dentro de `src/` (o lint quebrava se rodasse depois do build): as declarações do `tsconfig.node.json` vão para `node_modules/.tmp`, e a regra `*.config.d.ts` saiu do `.gitignore`
 - Página inicial com os landmarks que faltavam (`header`, `nav`, `main`, `footer`): o link "Pular para o conteúdo principal" do `index.html` apontava para `#main-content`, que não existia (WCAG 2.4.1). `SiteHeader` e `SiteFooter` novos em `components/layout`; o `main` é o `MainContent` que já existia
 - Uma só `meta description`: o `App` também renderizava `<title>` e `<meta>` pelo React 19, duplicando o `index.html`. O `index.html` (que o buscador lê sem executar JavaScript) é a fonte, agora com título e descrição reais do template

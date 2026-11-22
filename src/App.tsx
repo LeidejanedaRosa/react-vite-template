@@ -18,13 +18,6 @@ const STACK = [
 function App() {
   return (
     <div className='flex min-h-screen flex-col'>
-      {/* Meta tags nativas do React 19 */}
-      <title>React Vite Template - Moderno e Escalável</title>
-      <meta
-        name='description'
-        content='Template profissional para projetos React com Vite, TypeScript, Tailwind e todas as melhores práticas'
-      />
-
       <SiteHeader brand={BRAND} navItems={NAV_ITEMS} />
 
       <MainContent className='flex flex-1 items-center'>

@@ -20,6 +20,10 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ### 🐛 Corrigido
 
+- Página inicial com os landmarks que faltavam (`header`, `nav`, `main`, `footer`): o link "Pular para o conteúdo principal" do `index.html` apontava para `#main-content`, que não existia (WCAG 2.4.1). `SiteHeader` e `SiteFooter` novos em `components/layout`; o `main` é o `MainContent` que já existia
+- Uma só `meta description`: o `App` também renderizava `<title>` e `<meta>` pelo React 19, duplicando o `index.html`. O `index.html` (que o buscador lê sem executar JavaScript) é a fonte, agora com título e descrição reais do template
+- Botões do hero quebram linha a 320px em vez de estourar a largura (WCAG 1.4.10 — Reflow); título do hero `text-4xl` no celular
+- E2E: de 36 falhas (de 83, no chromium) para 0 nos quatro projetos. Testes com erro corrigidos — `header[role="banner"]` exigia ARIA redundante (agora `getByRole('banner')`); o de formatos de imagem exigia que houvesse imagem (agora pula quando não há); o de zoom 200% rodava no celular, onde equivale a ~195px, abaixo dos 320px da WCAG (agora só desktop). Removidas as asserções de números sem fonte oficial (≥ 3 `section`, > 5 links internos, ≥ 3 seções com mais de 100 palavras): obrigariam a página de demonstração a ter conteúdo de enchimento
 - Threshold de cobertura de 80% passa a ser cobrado de verdade: estava em `thresholds.global`, formato do Jest que o Vitest lê como glob de arquivos e ignora
 - Removido `coverage.all`, que não existe mais no Vitest 4 (com `coverage.include`, arquivos sem teste já entram no relatório)
 

@@ -9,6 +9,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ### ✨ Adicionado
 
+- Secret scan com `gitleaks git --staged` no pre-commit, antes do lint; sem o binário o commit falha com o link de instalação. O CI já varre o histórico inteiro
 - CI no GitHub Actions (`.github/workflows/ci.yml`), quatro jobs em paralelo: qualidade (Prettier, ESLint, tipos, cobertura, SonarCloud opcional, build), dependências e segredos (`pnpm audit` e gitleaks com binário de sha256 fixo), E2E contra o build de produção e Lighthouse CI
 - `lighthouserc.json`: 90 em cada categoria; acessibilidade, boas práticas e SEO quebram o build, performance avisa
 - `sonar-project.properties`, com organização e chave derivadas do nome do repositório no CI

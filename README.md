@@ -124,16 +124,17 @@ Executados com `pnpm test:e2e`. Rodam em browsers reais.
 
 **Browsers configurados no Playwright:**
 
-| Projeto         | Device         |
-| --------------- | -------------- |
-| `chromium`      | Desktop Chrome |
-| `webkit`        | Desktop Safari |
-| `Mobile Chrome` | Pixel 5        |
-| `Mobile Safari` | iPhone 12      |
+| Projeto         | Device          |
+| --------------- | --------------- |
+| `chromium`      | Desktop Chrome  |
+| `firefox`       | Desktop Firefox |
+| `webkit`        | Desktop Safari  |
+| `Mobile Chrome` | Pixel 5         |
+| `Mobile Safari` | iPhone 12       |
 
 **Configurações do Playwright:**
 
-- `baseURL`: `http://localhost:5173` (ou `PLAYWRIGHT_BASE_URL`)
+- `baseURL`: `http://localhost:5173` com `pnpm dev`; em CI, `http://localhost:4173` com `pnpm preview` — o E2E do CI testa o build de produção (ou `PLAYWRIGHT_BASE_URL`)
 - `timeout` por teste: 60 segundos
 - `navigationTimeout`: 30 segundos
 - `actionTimeout`: 15 segundos
@@ -383,6 +384,26 @@ Acesse `http://localhost:5173`.
 7. **`src/App.tsx`** — substituir pelo componente raiz do projeto real
 8. **GitHub** — depois de criar o repositório remoto, aplicar o padrão de configuração (seção abaixo)
 
+### CI (GitHub Actions)
+
+O workflow `.github/workflows/ci.yml` roda em todo PR e em todo push na `main`, com quatro jobs
+em paralelo:
+
+| Job (`name:`)                                 | O que verifica                                                                                     |
+| --------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `Lint, tipos, testes e build`                 | Prettier, ESLint, tipos, testes unitários com cobertura, SonarCloud (quality gate) e build         |
+| `Dependências e segredos`                     | `pnpm audit --audit-level high` e gitleaks no histórico inteiro                                    |
+| `E2E (chromium, firefox, webkit)`             | Playwright nos cinco projetos, contra o build de produção; relatório como artefato                 |
+| `Lighthouse (perf, a11y, boas práticas, SEO)` | Lighthouse CI: acessibilidade, boas práticas e SEO abaixo de 90 quebram o build; performance avisa |
+
+- **SonarCloud é opcional até existir o segredo `SONAR_TOKEN`**: sem ele, o passo é pulado com
+  um aviso, sem quebrar o CI. Organização e chave do projeto são derivadas do nome do repositório
+  (`dono em minúsculas` / `Dono_repo`, o padrão do SonarCloud ao importar do GitHub), então um
+  projeto criado a partir do template não precisa editar o `sonar-project.properties`.
+- **Performance só avisa** porque a nota varia entre execuções na máquina compartilhada do CI;
+  as outras categorias são estáveis. A faixa de 90 a 100 é a que o Lighthouse chama de "boa".
+- A versão do Node vem do `.nvmrc`, a mesma para o CI e para a máquina local.
+
 ### Configurando o repositório no GitHub
 
 O script `scripts/setup-github.mjs` aplica, em um comando, a configuração padrão do GitHub:
@@ -410,6 +431,16 @@ node scripts/setup-github.mjs seu-usuario/meu-projeto \
 
 # Proteger também uma branch de integração
 node scripts/setup-github.mjs seu-usuario/meu-projeto --branch develop --check "nome do job de CI"
+```
+
+Com o CI deste template, os quatro checks são:
+
+```bash
+node scripts/setup-github.mjs seu-usuario/meu-projeto \
+  --check "Lint, tipos, testes e build" \
+  --check "Dependências e segredos" \
+  --check "E2E (chromium, firefox, webkit)" \
+  --check "Lighthouse (perf, a11y, boas práticas, SEO)"
 ```
 
 Cada `--check` é o texto do campo `name:` de um job do workflow de CI. Sem nenhum `--check`, o
@@ -516,12 +547,12 @@ Copie `.env.example` para `.env.local` e preencha conforme necessário.
 
 ### Qualidade de Código
 
-| Comando             | Descrição                                               |
-| ------------------- | ------------------------------------------------------- |
-| `pnpm lint`         | ESLint — falha em qualquer warning (`--max-warnings 0`) |
-| `pnpm lint:fix`     | ESLint com correção automática                          |
-| `pnpm format`       | Prettier — formata todos os arquivos em `src/`          |
-| `pnpm format:check` | Prettier — verifica formatação sem alterar arquivos     |
+| Comando             | Descrição                                                     |
+| ------------------- | ------------------------------------------------------------- |
+| `pnpm lint`         | ESLint — falha em qualquer warning (`--max-warnings 0`)       |
+| `pnpm lint:fix`     | ESLint com correção automática                                |
+| `pnpm format`       | Prettier — formata o repositório (exceto o `.prettierignore`) |
+| `pnpm format:check` | Prettier — verifica formatação sem alterar arquivos           |
 
 ### Testes Unitários (Vitest)
 
@@ -550,11 +581,11 @@ Copie `.env.example` para `.env.local` e preencha conforme necessário.
 
 ### Deploy e Análise
 
-| Comando           | Descrição                                                                 |
-| ----------------- | ------------------------------------------------------------------------- |
-| `pnpm pre-deploy` | Validação completa antes do deploy: type-check + lint + cobertura + build |
-| `pnpm lighthouse` | Lighthouse CI via `lhci autorun`                                          |
-| `pnpm analyze`    | Alias para `build:analyze`                                                |
+| Comando           | Descrição                                                                               |
+| ----------------- | --------------------------------------------------------------------------------------- |
+| `pnpm pre-deploy` | Validação completa antes do deploy: type-check + lint + cobertura + build               |
+| `pnpm lighthouse` | Lighthouse CI sobre o `dist/` (rode `pnpm build` antes); limites em `lighthouserc.json` |
+| `pnpm analyze`    | Alias para `build:analyze`                                                              |
 
 ---
 

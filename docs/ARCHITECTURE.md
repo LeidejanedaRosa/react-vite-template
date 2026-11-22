@@ -295,10 +295,11 @@ if (import.meta.env.PROD) {
 
 **Por que foi escolhido:**
 
-- **5 categorias:** Performance, Acessibilidade, Boas Práticas, SEO e PWA
+- **Categorias:** Performance, Acessibilidade, Boas Práticas e SEO (a de PWA saiu no Lighthouse 12; o 13 trouxe Agentic Browsing, ainda sem limite aqui)
+- **Limites (`lighthouserc.json`):** 90 em cada categoria, a faixa "boa" do Lighthouse. Acessibilidade, Boas Práticas e SEO quebram o build; Performance só avisa, porque varia entre execuções no CI
 - **Histórico:** Compara scores entre deploys para detectar regressões
 - **Padrão do Google:** As mesmas métricas usadas para ranking no Google Search
-- **Fácil integração:** Plugin `@lhci/cli` rodando com `pnpm lighthouse`
+- **Fácil integração:** Plugin `@lhci/cli` rodando com `pnpm lighthouse` sobre o `dist/`; no CI, relatórios como artefato (sem o armazenamento público temporário do lhci)
 
 ---
 

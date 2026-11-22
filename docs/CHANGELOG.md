@@ -11,6 +11,13 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 - `setup-github.mjs` liga o CodeQL só com as linguagens que existem no repositório (lista explícita) e avisa quando ele ficou ligado para uma linguagem que saiu — caso real: o repositório do perfil perdeu o único workflow e a análise de `actions` passou a falhar em todo PR
 
+### 🔒 Segurança
+
+- `pnpm audit` de 82 alertas (1 crítico, 47 altos) para zero, todos em ferramentas de dev — `pnpm audit --prod` já estava limpo, nada chegava ao navegador
+- Dependências atualizadas dentro da versão principal (`pnpm update`, piso novo no `package.json`) e `@lhci/cli` 0.15 → 0.16, que trocou o `express` vulnerável (crítico, `proxy-addr`) e o `lighthouse` 12 → 13
+- `pnpm.overrides` com faixa, só onde o pacote ainda não tem versão corrigida: `minimatch` 7–11.0.0 → `^11.0.5` (deixa a 3.x do `@eslint/eslintrc`, de API diferente, intocada) e `glob` 13 → `^14.0.2` (só o `@sentry/vite-plugin`, que usa `glob(padrões, { absolute, nodir })`, igual na 14). Remover cada um quando o pacote que o puxa pedir a versão corrigida
+- Prettier 3.8 → 3.10 passou a escrever tipo união curto numa linha só; `Accessibility.tsx` reformatado
+
 ### 🐛 Corrigido
 
 - Threshold de cobertura de 80% passa a ser cobrado de verdade: estava em `thresholds.global`, formato do Jest que o Vitest lê como glob de arquivos e ignora

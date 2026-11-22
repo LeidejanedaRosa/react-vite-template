@@ -34,11 +34,11 @@ Obrigado por considerar contribuir para este projeto! Este guia vai te ajudar a 
 ✅ Aceite críticas com mente aberta  
 ✅ Foque no que é melhor para o projeto  
 ✅ Compartilhe conhecimento e ajude outros  
-✅ Documente decisões importantes  
+✅ Documente decisões importantes
 
 ❌ Não tolere linguagem ofensiva ou discriminatória  
 ❌ Não faça ataques pessoais  
-❌ Não publique informações privadas de outros  
+❌ Não publique informações privadas de outros
 
 ---
 
@@ -47,6 +47,7 @@ Obrigado por considerar contribuir para este projeto! Este guia vai te ajudar a 
 ### Pré-requisitos
 
 Certifique-se de ter instalado:
+
 - Node.js 20.x ou superior
 - pnpm 9.x ou superior
 - Git 2.x ou superior
@@ -71,6 +72,7 @@ pnpm dev
 ### Estrutura do Projeto
 
 Leia atentamente:
+
 - 📖 [ARCHITECTURE.md](./ARCHITECTURE.md) - Entenda as tecnologias usadas
 - 📖 [SETUP-GUIDE.md](./SETUP-GUIDE.md) - Guia de configuração
 - 📖 [FOLDER-STRUCTURE.md](./FOLDER-STRUCTURE.md) - Organização de código
@@ -108,6 +110,7 @@ git checkout -b refactor/o-que-refatorou
 ```
 
 **Exemplos:**
+
 ```bash
 git checkout -b feature/add-user-authentication
 git checkout -b fix/button-alignment-mobile
@@ -127,6 +130,7 @@ pnpm test:watch
 ```
 
 **Enquanto desenvolve:**
+
 - 💾 Faça commits frequentes e atômicos
 - 🧪 Escreva testes para novas funcionalidades
 - 📝 Atualize documentação se necessário
@@ -171,7 +175,7 @@ pnpm test:e2e
 
 ```typescript
 // ❌ Evite any
-function processData(data: any) { }
+function processData(data: any) {}
 
 // ✅ Use tipos específicos
 interface UserData {
@@ -179,10 +183,10 @@ interface UserData {
   name: string
   email: string
 }
-function processData(data: UserData) { }
+function processData(data: UserData) {}
 
 // ✅ Use generics quando apropriado
-function fetchData<T>(url: string): Promise<T> { }
+function fetchData<T>(url: string): Promise<T> {}
 ```
 
 #### Tipos vs Interfaces
@@ -228,7 +232,7 @@ interface ButtonProps {
 export const UserProfile = () => {
   const [user, setUser] = useState<User | null>(null)
   const { data, isLoading } = useQuery(['user'], fetchUser)
-  
+
   // ... resto do componente
 }
 
@@ -242,9 +246,9 @@ if (condition) {
 
 ```typescript
 // ✅ Use handle* para event handlers
-const handleClick = () => { }
-const handleSubmit = (e: React.FormEvent) => { }
-const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => { }
+const handleClick = () => {}
+const handleSubmit = (e: React.FormEvent) => {}
+const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {}
 
 // ✅ Use on* para props de eventos
 interface ButtonProps {
@@ -259,20 +263,20 @@ interface ButtonProps {
 
 ```typescript
 // 1. Imports externos (React, libraries)
-import { useState, useEffect } from 'react'
-import { useQuery } from '@tanstack/react-query'
-
 // 2. Imports internos (aliases)
 import { Button } from '@/components/ui'
 import { useAuth } from '@/features/auth'
+// 4. Types (se não inline)
+import type { User } from '@/types'
 import { formatDate } from '@/utils/format'
+
+import { useEffect, useState } from 'react'
+
+import { useQuery } from '@tanstack/react-query'
 
 // 3. Imports relativos
 import { LoginForm } from './LoginForm'
 import styles from './styles.module.css'
-
-// 4. Types (se não inline)
-import type { User } from '@/types'
 ```
 
 #### Use Aliases
@@ -294,16 +298,16 @@ import { useAuth } from '@/features/auth'
 // camelCase para variáveis, funções, hooks
 const userName = 'John'
 const isLoading = false
-function fetchUserData() { }
-const useCustomHook = () => { }
+function fetchUserData() {}
+const useCustomHook = () => {}
 ```
 
 #### Componentes e Types
 
 ```typescript
 // PascalCase para componentes, interfaces, types
-const UserProfile = () => { }
-interface UserData { }
+const UserProfile = () => {}
+interface UserData {}
 type Status = 'active' | 'inactive'
 ```
 
@@ -374,7 +378,7 @@ const userId = data?.userId ?? 'guest'
  * @param value - Valor numérico
  * @returns String formatada (ex: "R$ 1.234,56")
  */
-export function formatCurrency(value: number): string { }
+export function formatCurrency(value: number): string {}
 
 // ❌ Evite comentários óbvios
 // Incrementa contador
@@ -449,9 +453,11 @@ Ao criar um PR, preencha:
 
 ```markdown
 ## Descrição
+
 <!-- Descreva claramente o que este PR faz -->
 
 ## Tipo de Mudança
+
 - [ ] 🐛 Bug fix (correção que resolve issue)
 - [ ] ✨ Nova feature (adiciona funcionalidade)
 - [ ] 💥 Breaking change (mudança que quebra compatibilidade)
@@ -461,19 +467,24 @@ Ao criar um PR, preencha:
 - [ ] ✅ Testes
 
 ## Issue Relacionada
+
 <!-- Link para issue: Closes #123 -->
 
 ## Como Testar
+
 <!-- Passo a passo para revisor testar -->
+
 1. Faça checkout desta branch
 2. Execute `pnpm install` e `pnpm dev`
 3. Navegue para /pagina-x
 4. Teste funcionalidade Y
 
 ## Screenshots (se aplicável)
+
 <!-- Adicione prints de antes/depois -->
 
 ## Checklist
+
 - [ ] Código segue nossos padrões (lint passa)
 - [ ] Testes adicionados/atualizados
 - [ ] Documentação atualizada
@@ -513,7 +524,7 @@ describe('Button', () => {
   it('calls onClick when clicked', async () => {
     const handleClick = vi.fn()
     render(<Button onClick={handleClick}>Click</Button>)
-    
+
     await userEvent.click(screen.getByText('Click'))
     expect(handleClick).toHaveBeenCalledTimes(1)
   })
@@ -529,29 +540,32 @@ describe('Button', () => {
 
 ```typescript
 // checkout-flow.spec.ts
-import { test, expect } from '@playwright/test'
+import { expect, test } from '@playwright/test'
 
 test.describe('Checkout Flow', () => {
   test('completes purchase successfully', async ({ page }) => {
     await page.goto('/products')
-    
+
     // Adiciona produto ao carrinho
-    await page.getByRole('button', { name: 'Adicionar ao carrinho' }).first().click()
-    
+    await page
+      .getByRole('button', { name: 'Adicionar ao carrinho' })
+      .first()
+      .click()
+
     // Vai para carrinho
     await page.getByRole('link', { name: 'Carrinho' }).click()
     expect(page.url()).toContain('/cart')
-    
+
     // Finaliza compra
     await page.getByRole('button', { name: 'Finalizar compra' }).click()
-    
+
     // Preenche formulário
     await page.getByLabel('Nome').fill('João Silva')
     await page.getByLabel('Email').fill('joao@example.com')
-    
+
     // Confirma
     await page.getByRole('button', { name: 'Confirmar pedido' }).click()
-    
+
     // Valida sucesso
     await expect(page.getByText('Pedido confirmado')).toBeVisible()
   })
@@ -561,6 +575,7 @@ test.describe('Checkout Flow', () => {
 ### Quando Escrever Testes
 
 **Sempre escreva testes para:**
+
 - ✅ Lógica de negócio complexa
 - ✅ Utilitários e helpers
 - ✅ Hooks customizados
@@ -568,6 +583,7 @@ test.describe('Checkout Flow', () => {
 - ✅ Correções de bugs (teste de regressão)
 
 **Pode pular testes para:**
+
 - ⚠️ Componentes muito simples (wrapper de div)
 - ⚠️ Protótipos rápidos (mas adicione depois!)
 
@@ -580,32 +596,38 @@ test.describe('Checkout Flow', () => {
 #### O Que Verificar
 
 **Funcionalidade:**
+
 - [ ] O código faz o que deveria fazer?
 - [ ] Edge cases estão cobertos?
 - [ ] Não introduz novos bugs?
 
 **Qualidade:**
+
 - [ ] Código é legível e fácil de entender?
 - [ ] Segue nossos padrões?
 - [ ] Está bem estruturado?
 - [ ] Nomes são claros e descritivos?
 
 **Testes:**
+
 - [ ] Testes existem e são significativos?
 - [ ] Cobertura adequada?
 - [ ] Testes passam?
 
 **Performance:**
+
 - [ ] Não há loops desnecessários?
 - [ ] Não há re-renders excessivos?
 - [ ] Imagens estão otimizadas?
 
 **Segurança:**
+
 - [ ] Não expõe dados sensíveis?
 - [ ] Valida inputs do usuário?
 - [ ] Não tem vulnerabilidades óbvias?
 
 **Acessibilidade (se UI):**
+
 - [ ] Navegação por teclado funciona?
 - [ ] Contraste adequado?
 - [ ] Labels e alt texts presentes?
@@ -614,8 +636,8 @@ test.describe('Checkout Flow', () => {
 
 ```markdown
 ✅ BOM:
-"Este componente ficou muito limpo! Uma sugestão: poderíamos extrair 
-a lógica de validação para um hook customizado para facilitar 
+"Este componente ficou muito limpo! Uma sugestão: poderíamos extrair
+a lógica de validação para um hook customizado para facilitar
 reutilização. O que você acha?"
 
 ❌ RUIM:
@@ -623,6 +645,7 @@ reutilização. O que você acha?"
 ```
 
 **Princípios:**
+
 - 🎯 Seja específico e construtivo
 - 💡 Sugira alternativas, não apenas critique
 - 🤝 Assuma boa intenção do autor
@@ -654,6 +677,7 @@ Use prefixos para clareza:
 ### Como Autor
 
 **Ao Receber Feedback:**
+
 - 🙏 Agradeça o revisor pelo tempo
 - 🤔 Considere sugestões com mente aberta
 - 💬 Responda dúvidas e explique decisões
@@ -661,10 +685,11 @@ Use prefixos para clareza:
 - ✅ Marque comentários como resolvidos
 
 **Se Discordar:**
+
 ```markdown
-"Entendo sua preocupação com performance aqui. Pensei nisso, mas 
-optei por esta abordagem porque [razão]. Considerando que [contexto], 
-acho que o tradeoff vale a pena. O que você acha? Estou aberto a 
+"Entendo sua preocupação com performance aqui. Pensei nisso, mas
+optei por esta abordagem porque [razão]. Considerando que [contexto],
+acho que o tradeoff vale a pena. O que você acha? Estou aberto a
 outras sugestões!"
 ```
 
@@ -682,12 +707,14 @@ outras sugestões!"
 ### Boas Práticas ao Perguntar
 
 ✅ **Faça:**
+
 - Pesquise primeiro na documentação e issues existentes
 - Forneça contexto completo
 - Inclua código, screenshots, logs de erro
 - Descreva o que já tentou
 
 ❌ **Evite:**
+
 - Perguntas muito genéricas ("Como fazer X?")
 - Esperar resposta imediata
 - Fazer múltiplas perguntas em uma única mensagem
@@ -699,6 +726,7 @@ outras sugestões!"
 Estou implementando a feature X e preciso fazer Y.
 
 **O que tentei:**
+
 1. Tentei usar biblioteca Z mas deu erro A
 2. Li a documentação de B mas não ficou claro
 
@@ -714,11 +742,13 @@ Qual a melhor forma de fazer Y neste contexto?
 ## Recursos Úteis
 
 ### Documentação do Projeto
+
 - [ARCHITECTURE.md](./ARCHITECTURE.md) - Stack tecnológica
 - [SETUP-GUIDE.md](./SETUP-GUIDE.md) - Setup e configuração
 - [FOLDER-STRUCTURE.md](./FOLDER-STRUCTURE.md) - Organização de código
 
 ### Ferramentas
+
 - [TypeScript Handbook](https://www.typescriptlang.org/docs/)
 - [React Docs](https://react.dev)
 - [Tailwind CSS Docs](https://tailwindcss.com)
@@ -726,6 +756,7 @@ Qual a melhor forma de fazer Y neste contexto?
 - [Playwright Docs](https://playwright.dev)
 
 ### Padrões
+
 - [Conventional Commits](https://www.conventionalcommits.org/)
 - [Semantic Versioning](https://semver.org/)
 
@@ -736,6 +767,7 @@ Qual a melhor forma de fazer Y neste contexto?
 Obrigado por contribuir! Cada PR, issue, revisão e discussão torna este projeto melhor. 🚀
 
 **Mantenedores:**
+
 - [Seu Nome] - [@seu-usuario]
 
 ---

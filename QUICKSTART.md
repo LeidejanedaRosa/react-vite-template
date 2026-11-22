@@ -50,6 +50,7 @@ nano .env.local  # ou seu editor preferido
 ```
 
 **Variáveis importantes:**
+
 - `VITE_APP_NAME` - Nome da sua aplicação
 - `VITE_API_URL` - URL da sua API
 - `VITE_SENTRY_DSN` - DSN do Sentry (se usar)

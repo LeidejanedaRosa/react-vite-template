@@ -5,6 +5,7 @@
 ## Por que Better Auth?
 
 ### Vantagens
+
 - ✅ **Open source e gratuito** - Sem custos mensais
 - ✅ **Controle total** - Toda lógica no seu código
 - ✅ **Type-safe** - TypeScript first
@@ -14,23 +15,25 @@
 
 ### Comparação com Auth0
 
-| Feature | Better Auth | Auth0 |
-|---------|-------------|-------|
-| Custo | Gratuito | $0-$240+/mês |
-| Controle | Total | Limitado |
-| Customização | Ilimitada | Restrita |
-| Vendor Lock-in | Não | Sim |
-| Compliance | Você gerencia | Gerenciado |
-| Setup | 30 min | 10 min |
-| Escalabilidade | Você gerencia | Automática |
+| Feature        | Better Auth   | Auth0        |
+| -------------- | ------------- | ------------ |
+| Custo          | Gratuito      | $0-$240+/mês |
+| Controle       | Total         | Limitado     |
+| Customização   | Ilimitada     | Restrita     |
+| Vendor Lock-in | Não           | Sim          |
+| Compliance     | Você gerencia | Gerenciado   |
+| Setup          | 30 min        | 10 min       |
+| Escalabilidade | Você gerencia | Automática   |
 
 **Use Better Auth quando:**
+
 - Quer controle total sobre auth
 - Precisa de regras customizadas
 - Quer economizar custos
 - Dados sensíveis devem ficar no seu servidor
 
 **Use Auth0 quando:**
+
 - Cliente exige compliance específico
 - Precisa de Enterprise SSO (SAML, LDAP)
 - Projeto enorme (100k+ usuários) desde início
@@ -69,6 +72,7 @@
 ### Por que Hono?
 
 **Hono é ideal para freelancer:**
+
 - 🚀 Extremamente rápido (mais que Express)
 - 📦 Bundle minúsculo (~15kb)
 - 🎯 TypeScript first com RPC type-safe
@@ -138,7 +142,7 @@ api/
 
 ```typescript
 // src/db/schema.ts
-import { pgTable, text, timestamp, boolean } from 'drizzle-orm/pg-core'
+import { boolean, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
 
 export const users = pgTable('users', {
   id: text('id').primaryKey(),
@@ -179,18 +183,19 @@ export const accounts = pgTable('accounts', {
 // src/auth.ts
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
+
 import { db } from './db'
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: 'pg', // ou 'sqlite'
   }),
-  
+
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,
   },
-  
+
   socialProviders: {
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -201,12 +206,12 @@ export const auth = betterAuth({
       clientSecret: process.env.GITHUB_CLIENT_SECRET!,
     },
   },
-  
+
   session: {
     expiresIn: 60 * 60 * 24 * 7, // 7 dias
     updateAge: 60 * 60 * 24, // Atualizar a cada 24h
   },
-  
+
   advanced: {
     cookiePrefix: 'myapp',
     generateId: () => crypto.randomUUID(),
@@ -221,6 +226,7 @@ export const auth = betterAuth({
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
+
 import { auth } from './auth'
 
 const app = new Hono()
@@ -236,12 +242,12 @@ app.use(
 )
 
 // Better Auth routes
-app.all('/api/auth/*', (c) => {
+app.all('/api/auth/*', c => {
   return auth.handler(c.req.raw)
 })
 
 // Protected route example
-app.get('/api/user', async (c) => {
+app.get('/api/user', async c => {
   const session = await auth.api.getSession({
     headers: c.req.raw.headers,
   })
@@ -259,7 +265,7 @@ export default app
 if (import.meta.env?.DEV) {
   const port = 3001
   console.log(`🚀 Server running at http://localhost:${port}`)
-  
+
   // @ts-ignore
   export default {
     port,
@@ -273,6 +279,7 @@ if (import.meta.env?.DEV) {
 ```typescript
 // src/middleware/auth.ts
 import { Context, Next } from 'hono'
+
 import { auth } from '../auth'
 
 export async function requireAuth(c: Context, next: Next) {
@@ -334,13 +341,7 @@ export const authClient = createAuthClient({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3001',
 })
 
-export const {
-  signIn,
-  signUp,
-  signOut,
-  useSession,
-  useUser,
-} = authClient
+export const { signIn, signUp, signOut, useSession, useUser } = authClient
 ```
 
 ### 2. Auth Provider
@@ -376,7 +377,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
 ```typescript
 // src/features/auth/hooks/useAuth.ts
-import { useSession, signIn, signOut, signUp } from '@/lib/auth'
+import { signIn, signOut, signUp, useSession } from '@/lib/auth'
+
 import { useMutation } from '@tanstack/react-query'
 
 export function useAuth() {
@@ -431,13 +433,13 @@ export function useAuth() {
     user: session?.user ?? null,
     isAuthenticated: !!session?.user,
     isLoading: isLoadingSession,
-    
+
     login: loginMutation.mutateAsync,
     isLoggingIn: loginMutation.isPending,
-    
+
     register: registerMutation.mutateAsync,
     isRegistering: registerMutation.isPending,
-    
+
     logout: logoutMutation.mutateAsync,
     isLoggingOut: logoutMutation.isPending,
   }
@@ -629,23 +631,27 @@ VITE_API_URL=https://api.seusite.com
 ## Features Principais
 
 ### ✅ Email/Password
+
 - Registro com verificação de email
 - Login com email e senha
 - Reset de senha
 - Change password
 
 ### ✅ Social Login
+
 - Google OAuth
 - GitHub OAuth
 - Outros providers (configurável)
 
 ### ✅ Sessões
+
 - Cookie-based sessions
 - Token refresh automático
 - Multi-device support
 - Session revocation
 
 ### ✅ Segurança
+
 - Password hashing (bcrypt)
 - CSRF protection
 - Rate limiting

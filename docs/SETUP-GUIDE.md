@@ -35,6 +35,7 @@ pnpm --version
 ```
 
 **Por que pnpm?**
+
 - ✅ Mais rápido que npm e yarn
 - ✅ Economiza espaço em disco (hard links)
 - ✅ Segurança: evita dependências fantasma
@@ -67,6 +68,7 @@ pnpm install
 ```
 
 **O que acontece aqui:**
+
 - 📦 Instala dependências de produção (React, etc)
 - 🛠️ Instala dependências de desenvolvimento (ESLint, Vitest, etc)
 - 🔗 Configura symlinks para aliases do TypeScript
@@ -193,10 +195,10 @@ import { formatDate } from '@utils/date'
 Configure os aliases para funcionarem com o Vite:
 
 ```typescript
-import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
 import { visualizer } from 'rollup-plugin-visualizer'
+import { defineConfig } from 'vite'
 
 export default defineConfig({
   plugins: [
@@ -209,7 +211,7 @@ export default defineConfig({
       brotliSize: true,
     }),
   ],
-  
+
   // Aliases
   resolve: {
     alias: {
@@ -240,9 +242,9 @@ export default defineConfig({
 ```javascript
 module.exports = {
   root: true,
-  env: { 
-    browser: true, 
-    es2020: true 
+  env: {
+    browser: true,
+    es2020: true,
   },
   extends: [
     'eslint:recommended',
@@ -270,9 +272,12 @@ module.exports = {
       { allowConstantExport: true },
     ],
     // Suas regras customizadas
-    '@typescript-eslint/no-unused-vars': ['error', { 
-      argsIgnorePattern: '^_' 
-    }],
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      {
+        argsIgnorePattern: '^_',
+      },
+    ],
   },
 }
 ```
@@ -312,10 +317,7 @@ pnpm-lock.yaml
 ```javascript
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       // Suas customizações
@@ -370,6 +372,7 @@ echo "✅ Pre-commit verificações passaram!"
 ```
 
 **O que faz:**
+
 1. ✅ Roda ESLint apenas nos arquivos modificados
 2. ✅ Formata código com Prettier
 3. ✅ Verifica tipos TypeScript em todo o projeto
@@ -396,6 +399,7 @@ echo "✅ Testes passaram! Continuando com push..."
 ```
 
 **O que faz:**
+
 - ✅ Roda todos os testes antes de fazer push
 - ❌ Bloqueia push se algum teste falhar
 
@@ -405,13 +409,8 @@ Arquivo: `.lintstagedrc.json`
 
 ```json
 {
-  "*.{js,jsx,ts,tsx}": [
-    "eslint --fix",
-    "prettier --write"
-  ],
-  "*.{json,md,mdx,css,html}": [
-    "prettier --write"
-  ]
+  "*.{js,jsx,ts,tsx}": ["eslint --fix", "prettier --write"],
+  "*.{json,md,mdx,css,html}": ["prettier --write"]
 }
 ```
 
@@ -429,25 +428,25 @@ pnpm add -D lint-staged
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    
+
     "type-check": "tsc --noEmit",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint . --ext ts,tsx --fix",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,md}\"",
-    
+
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
-    
+
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:debug": "playwright test --debug",
-    
+
     "lighthouse": "lhci autorun",
-    
+
     "analyze": "vite build && open dist/stats.html",
-    
+
     "prepare": "husky install"
   }
 }
@@ -487,14 +486,14 @@ if (import.meta.env.PROD) {
   Sentry.init({
     dsn: import.meta.env.VITE_SENTRY_DSN,
     environment: import.meta.env.VITE_SENTRY_ENVIRONMENT || 'production',
-    
+
     // Performance Monitoring
     tracesSampleRate: 1.0, // 100% em dev, reduzir em prod (ex: 0.1 = 10%)
-    
+
     // Session Replay (opcional)
     replaysSessionSampleRate: 0.1, // 10% das sessões
     replaysOnErrorSampleRate: 1.0, // 100% quando há erro
-    
+
     integrations: [
       new Sentry.BrowserTracing(),
       new Sentry.Replay({
@@ -502,7 +501,7 @@ if (import.meta.env.PROD) {
         blockAllMedia: true,
       }),
     ],
-    
+
     // Filtrar erros irrelevantes
     beforeSend(event, hint) {
       // Ignorar erros de extensões do browser
@@ -554,8 +553,8 @@ pnpm add web-vitals
 Arquivo: `src/utils/reportWebVitals.ts`
 
 ```typescript
-import { onCLS, onINP, onLCP, onFCP, onTTFB } from 'web-vitals'
 import * as Sentry from '@sentry/react'
+import { onCLS, onFCP, onINP, onLCP, onTTFB } from 'web-vitals'
 
 export function reportWebVitals() {
   // Apenas em produção
@@ -565,7 +564,7 @@ export function reportWebVitals() {
   onCLS(metric => sendToAnalytics(metric))
   onINP(metric => sendToAnalytics(metric))
   onLCP(metric => sendToAnalytics(metric))
-  
+
   // Outras métricas importantes
   onFCP(metric => sendToAnalytics(metric))
   onTTFB(metric => sendToAnalytics(metric))
@@ -573,7 +572,7 @@ export function reportWebVitals() {
 
 function sendToAnalytics(metric: any) {
   const body = JSON.stringify(metric)
-  
+
   // Enviar para Sentry
   Sentry.captureMessage(`Web Vital: ${metric.name}`, {
     level: 'info',
@@ -582,7 +581,7 @@ function sendToAnalytics(metric: any) {
     },
     extra: metric,
   })
-  
+
   // OU enviar para Google Analytics
   if (window.gtag) {
     window.gtag('event', metric.name, {
@@ -594,7 +593,7 @@ function sendToAnalytics(metric: any) {
       non_interaction: true,
     })
   }
-  
+
   // OU enviar para seu próprio endpoint
   // fetch('/api/analytics', { method: 'POST', body })
 }
@@ -675,6 +674,7 @@ Arquivo: `netlify.toml`
 Garante que seu código segue padrões de acessibilidade durante desenvolvimento.
 
 **Exemplos de regras:**
+
 - ✅ Imagens devem ter `alt`
 - ✅ Botões devem ter texto acessível
 - ✅ Formulários devem ter labels
@@ -689,26 +689,27 @@ pnpm add -D @axe-core/playwright
 Arquivo: `tests/accessibility.spec.ts`
 
 ```typescript
-import { test, expect } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
+import { expect, test } from '@playwright/test'
 
 test.describe('Accessibility tests', () => {
-  test('homepage should not have accessibility violations', async ({ page }) => {
+  test('homepage should not have accessibility violations', async ({
+    page,
+  }) => {
     await page.goto('/')
-    
-    const accessibilityScanResults = await new AxeBuilder({ page })
-      .analyze()
-    
+
+    const accessibilityScanResults = await new AxeBuilder({ page }).analyze()
+
     expect(accessibilityScanResults.violations).toEqual([])
   })
-  
+
   test('contact form should be accessible', async ({ page }) => {
     await page.goto('/contact')
-    
+
     const accessibilityScanResults = await new AxeBuilder({ page })
       .include('#contact-form')
       .analyze()
-    
+
     expect(accessibilityScanResults.violations).toEqual([])
   })
 })
@@ -739,21 +740,21 @@ export default function HomePage() {
       <title>Título da Página - Site do Cliente</title>
       <meta name="description" content="Descrição otimizada para SEO com 150-160 caracteres" />
       <meta name="keywords" content="palavra-chave1, palavra-chave2" />
-      
+
       {/* Open Graph / Facebook */}
       <meta property="og:type" content="website" />
       <meta property="og:url" content="https://seusite.com/" />
       <meta property="og:title" content="Título para redes sociais" />
       <meta property="og:description" content="Descrição para redes sociais" />
       <meta property="og:image" content="https://seusite.com/og-image.jpg" />
-      
+
       {/* Twitter */}
       <meta property="twitter:card" content="summary_large_image" />
       <meta property="twitter:url" content="https://seusite.com/" />
       <meta property="twitter:title" content="Título para Twitter" />
       <meta property="twitter:description" content="Descrição para Twitter" />
       <meta property="twitter:image" content="https://seusite.com/twitter-image.jpg" />
-      
+
       <div>
         {/* Conteúdo da página */}
       </div>
@@ -813,7 +814,7 @@ export default function HomePage() {
       "contactType": "customer service"
     }
   }
-  
+
   return (
     <>
       <script
@@ -948,6 +949,7 @@ pnpm lighthouse
 ### Problema: Aliases não funcionam
 
 **Solução:**
+
 1. Verifique `tsconfig.json` → `paths`
 2. Verifique `vite.config.ts` → `resolve.alias`
 3. Reinicie o servidor (`pnpm dev`)
@@ -956,6 +958,7 @@ pnpm lighthouse
 ### Problema: Husky hooks não executam
 
 **Solução:**
+
 ```bash
 # Reinstalar hooks
 pnpm exec husky install
@@ -965,6 +968,7 @@ chmod +x .husky/*
 ### Problema: Testes falham no CI mas passam localmente
 
 **Solução:**
+
 1. Certifique-se que `.env.test` existe
 2. Limpe cache: `pnpm test --clearCache`
 3. Verifique diferenças de timezone/locale
@@ -972,6 +976,7 @@ chmod +x .husky/*
 ### Problema: Build falha com erro de memória
 
 **Solução:**
+
 ```bash
 # Aumentar limite de memória do Node
 NODE_OPTIONS=--max-old-space-size=4096 pnpm build

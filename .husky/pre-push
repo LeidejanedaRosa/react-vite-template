@@ -1,3 +1,8 @@
+if sh scripts/push-only-deletes.sh; then
+  echo "⏭️  O push só apaga branches: testes pulados."
+  exit 0
+fi
+
 echo "🧪 Rodando testes antes do push..."
 
 if ! pnpm run test; then

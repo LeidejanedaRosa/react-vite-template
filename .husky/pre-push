@@ -1,8 +1,6 @@
 echo "🧪 Rodando testes antes do push..."
 
-pnpm run test
-
-if [ $? -ne 0 ]; then
+if ! pnpm run test; then
   echo "❌ Testes falharam. Push cancelado."
   echo "💡 Corrija os testes e tente novamente."
   exit 1

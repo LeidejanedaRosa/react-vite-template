@@ -219,13 +219,7 @@ interface AccessibleLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorEleme
   variant?: 'primary' | 'secondary' | 'ghost'
   isCurrent?: boolean
   ariaCurrent?:
-    | boolean
-    | 'page'
-    | 'step'
-    | 'location'
-    | 'date'
-    | 'time'
-    | 'true'
+    boolean | 'page' | 'step' | 'location' | 'date' | 'time' | 'true'
 }
 
 export const AccessibleLink = forwardRef<

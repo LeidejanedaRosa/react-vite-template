@@ -416,6 +416,11 @@ Com o [app do CodeRabbit](https://github.com/apps/coderabbitai) instalado no rep
   CodeRabbit só revisa PRs para a branch padrão e marca "skipping" nos PRs de sub-branch para uma
   branch de integração (`feat/checkout-cart` → `feat/checkout`).
 
+O CodeRabbit lê esta configuração **da branch do PR**, não da branch de destino. Uma branch criada
+antes de o arquivo existir continua sem ele, e o PR dela segue em "skipping" até receber o arquivo
+(com um merge ou rebase da branch de onde ela saiu). Num projeto criado a partir deste template,
+toda branch já nasce com o arquivo.
+
 Mudanças no arquivo passam pela CLI do CodeRabbit (`coderabbit config validate`), que confere o
 schema oficial.
 

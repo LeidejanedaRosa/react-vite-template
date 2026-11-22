@@ -128,8 +128,9 @@ Documentação da stack tecnológica e decisões arquiteturais do template.
 
 **`pre-commit`:**
 
-1. `pnpm exec lint-staged` — lint e formatação nos arquivos modificados
-2. `pnpm run type-check` — verifica tipos TypeScript em todo o projeto
+1. `gitleaks git --staged` — bloqueia o commit se houver segredo no que está staged (falha se o gitleaks não estiver instalado)
+2. `pnpm exec lint-staged` — lint e formatação nos arquivos modificados
+3. `pnpm run type-check` — verifica tipos TypeScript em todo o projeto
 
 **`pre-push`:**
 
@@ -368,7 +369,7 @@ Threshold de 80% obrigatório. Cobertura mede o que foi testado, não o que func
 
 ### 5. Qualidade no commit, não no PR
 
-lint-staged + type-check no pre-commit garantem que código mal formatado ou com erros de tipo nunca chega ao repositório.
+gitleaks + lint-staged + type-check no pre-commit garantem que segredo, código mal formatado ou com erro de tipo nunca chega ao repositório. O CI repete as mesmas verificações, porque o hook local pode não existir em outra máquina.
 
 ### 6. Separação clara de contextos
 

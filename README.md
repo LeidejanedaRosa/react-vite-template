@@ -305,7 +305,7 @@ react-vite-template/
 ├── .env.example                     # Modelo de variáveis (commitar)
 ├── .env.local                       # Variáveis locais (NÃO commitar)
 ├── .husky/
-│   ├── pre-commit                   # lint-staged + type-check
+│   ├── pre-commit                   # gitleaks + lint-staged + type-check
 │   └── pre-push                     # vitest run
 ├── .lintstagedrc.json
 ├── .prettierrc
@@ -351,6 +351,7 @@ Aliases configurados em `tsconfig.app.json`, `tsconfig.test.json` e `vite.config
 
 - Node.js >= 20
 - pnpm >= 9 (`npm install -g pnpm`)
+- [gitleaks](https://github.com/gitleaks/gitleaks#installing) — exigido pelo pre-commit (não vem pelo npm)
 
 ### Usando como template
 
@@ -899,12 +900,14 @@ Configuração com **3 contextos separados** — código fonte, testes unitário
 
 ### Git Hooks (Husky + lint-staged)
 
-**`git commit`** — executa lint-staged + type-check:
+**`git commit`** — executa gitleaks + lint-staged + type-check.
+
+Primeiro, `gitleaks git --staged` procura segredos (chave de API, token) no que está sendo commitado e bloqueia o commit se achar, mostrando arquivo e linha com o valor escondido. Sem o gitleaks instalado o commit falha com o link de instalação, em vez de pular a verificação em silêncio. Depois:
 
 ```
 .lintstagedrc.json
-├── *.{js,jsx,ts,tsx}     → eslint --fix + prettier --write
-└── *.{json,md,css,html}  → prettier --write
+├── *.{js,jsx,ts,tsx}                     → eslint --fix + prettier --write
+└── *.{json,md,mdx,css,html,yml,yaml}     → prettier --write
 ```
 
 Após lint-staged, o hook executa `pnpm type-check` para garantir que tipos TypeScript estejam corretos.

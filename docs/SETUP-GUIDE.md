@@ -355,16 +355,18 @@ pnpm exec husky init
 Arquivo: `.husky/pre-commit`
 
 ```bash
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
 echo "🔍 Rodando verificações pre-commit..."
 
-# 1. Lint staged files
-echo "📝 Checando lint..."
+echo "🔐 Procurando segredos no que vai ser commitado..."
+if ! command -v gitleaks >/dev/null 2>&1; then
+  echo "❌ gitleaks não encontrado. Instale: https://github.com/gitleaks/gitleaks#installing" >&2
+  exit 1
+fi
+gitleaks git --staged --redact --no-banner --verbose
+
+echo "📝 Checando lint e formatação..."
 pnpm exec lint-staged
 
-# 2. Type check
 echo "🔷 Checando tipos TypeScript..."
 pnpm run type-check
 
@@ -373,9 +375,10 @@ echo "✅ Pre-commit verificações passaram!"
 
 **O que faz:**
 
-1. ✅ Roda ESLint apenas nos arquivos modificados
-2. ✅ Formata código com Prettier
-3. ✅ Verifica tipos TypeScript em todo o projeto
+1. ✅ Bloqueia o commit se houver segredo no que está staged (gitleaks)
+2. ✅ Roda ESLint apenas nos arquivos modificados
+3. ✅ Formata código com Prettier
+4. ✅ Verifica tipos TypeScript em todo o projeto
 
 ### Pre-push Hook (Opcional mas Recomendado)
 

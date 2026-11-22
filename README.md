@@ -405,6 +405,20 @@ em paralelo:
   as outras categorias são estáveis. A faixa de 90 a 100 é a que o Lighthouse chama de "boa".
 - A versão do Node vem do `.nvmrc`, a mesma para o CI e para a máquina local.
 
+### Revisão automática (CodeRabbit)
+
+Com o [app do CodeRabbit](https://github.com/apps/coderabbitai) instalado no repositório, o
+`.coderabbit.yaml` define como ele revisa os PRs:
+
+- `profile: chill` — aponta problemas reais, sem comentário de estilo que o ESLint e o Prettier já
+  cobrem.
+- `auto_review.base_branches: ['.*']` — revisa PRs para **qualquer** branch. Sem isso, o
+  CodeRabbit só revisa PRs para a branch padrão e marca "skipping" nos PRs de sub-branch para uma
+  branch de integração (`feat/checkout-cart` → `feat/checkout`).
+
+Mudanças no arquivo passam pela CLI do CodeRabbit (`coderabbit config validate`), que confere o
+schema oficial.
+
 ### Configurando o repositório no GitHub
 
 O script `scripts/setup-github.mjs` aplica, em um comando, a configuração padrão do GitHub:

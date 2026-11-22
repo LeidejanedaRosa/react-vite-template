@@ -105,7 +105,10 @@ test.describe('WCAG 2.1 AA Accessibility Tests - Axe-core', () => {
     test('page should be readable at 200% zoom', async ({
       page,
       browserName,
+      isMobile,
     }) => {
+      // WCAG 1.4.10 pede reflow a 320px CSS; 200% num celular de ~390px dá ~195px.
+      test.skip(isMobile, 'Zoom de 200% só tem equivalente na WCAG em desktop')
       await page.emulateMedia({ reducedMotion: 'reduce' })
 
       await page.evaluate(browser => {

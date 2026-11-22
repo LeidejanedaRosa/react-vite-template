@@ -1,27 +1,39 @@
-import { Container } from '@components/layout'
-import { Button } from '@components/ui'
+import { Container, SiteFooter, SiteHeader } from '@components/layout'
+import { Button, MainContent } from '@components/ui'
+
+const BRAND = 'React Vite Template'
+
+const NAV_ITEMS = [
+  { href: '#inicio', label: 'Início' },
+  { href: '#recursos', label: 'Recursos' },
+]
+
+const STACK = [
+  { name: 'React 19', role: 'UI Library' },
+  { name: 'TypeScript', role: 'Type Safety' },
+  { name: 'Tailwind 4', role: 'Styling' },
+  { name: 'Vite', role: 'Build Tool' },
+]
 
 function App() {
   return (
-    <>
-      {/* Meta tags nativas do React 19 */}
-      <title>React Vite Template - Moderno e Escalável</title>
-      <meta
-        name='description'
-        content='Template profissional para projetos React com Vite, TypeScript, Tailwind e todas as melhores práticas'
-      />
+    <div className='flex min-h-screen flex-col'>
+      <SiteHeader brand={BRAND} navItems={NAV_ITEMS} />
 
-      <Container>
-        <div className='flex min-h-screen flex-col items-center justify-center'>
-          <div className='text-center'>
-            <h1 className='text-primary-600 mb-4 text-6xl font-bold'>
-              React Vite Template
+      <MainContent className='flex flex-1 items-center'>
+        <Container className='py-16 text-center'>
+          <section id='inicio' aria-labelledby='inicio-titulo'>
+            <h1
+              id='inicio-titulo'
+              className='text-primary-600 mb-4 text-4xl font-bold sm:text-6xl'
+            >
+              {BRAND}
             </h1>
             <p className='mb-8 text-xl text-gray-600'>
               Template moderno com React 19, Vite, TypeScript e Tailwind 4
             </p>
 
-            <div className='flex justify-center gap-4'>
+            <div className='flex flex-wrap justify-center gap-4'>
               <Button variant='primary' size='lg'>
                 Começar
               </Button>
@@ -29,29 +41,32 @@ function App() {
                 Documentação
               </Button>
             </div>
+          </section>
 
-            <div className='mt-12 grid grid-cols-2 gap-6 text-sm md:grid-cols-4'>
-              <div className='rounded-lg bg-white p-4 shadow'>
-                <div className='text-primary-600 font-semibold'>React 19</div>
-                <div className='text-gray-500'>UI Library</div>
-              </div>
-              <div className='rounded-lg bg-white p-4 shadow'>
-                <div className='text-primary-600 font-semibold'>TypeScript</div>
-                <div className='text-gray-500'>Type Safety</div>
-              </div>
-              <div className='rounded-lg bg-white p-4 shadow'>
-                <div className='text-primary-600 font-semibold'>Tailwind 4</div>
-                <div className='text-gray-500'>Styling</div>
-              </div>
-              <div className='rounded-lg bg-white p-4 shadow'>
-                <div className='text-primary-600 font-semibold'>Vite</div>
-                <div className='text-gray-500'>Build Tool</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Container>
-    </>
+          <section
+            id='recursos'
+            aria-labelledby='recursos-titulo'
+            className='mt-12'
+          >
+            <h2 id='recursos-titulo' className='sr-only'>
+              Stack incluída
+            </h2>
+            <ul className='mx-auto grid max-w-3xl grid-cols-2 gap-6 text-sm md:grid-cols-4'>
+              {STACK.map(item => (
+                <li key={item.name} className='rounded-lg bg-white p-4 shadow'>
+                  <h3 className='text-primary-600 font-semibold'>
+                    {item.name}
+                  </h3>
+                  <p className='text-gray-500'>{item.role}</p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        </Container>
+      </MainContent>
+
+      <SiteFooter owner={BRAND} />
+    </div>
   )
 }
 

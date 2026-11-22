@@ -124,16 +124,17 @@ Executados com `pnpm test:e2e`. Rodam em browsers reais.
 
 **Browsers configurados no Playwright:**
 
-| Projeto         | Device         |
-| --------------- | -------------- |
-| `chromium`      | Desktop Chrome |
-| `webkit`        | Desktop Safari |
-| `Mobile Chrome` | Pixel 5        |
-| `Mobile Safari` | iPhone 12      |
+| Projeto         | Device          |
+| --------------- | --------------- |
+| `chromium`      | Desktop Chrome  |
+| `firefox`       | Desktop Firefox |
+| `webkit`        | Desktop Safari  |
+| `Mobile Chrome` | Pixel 5         |
+| `Mobile Safari` | iPhone 12       |
 
 **Configurações do Playwright:**
 
-- `baseURL`: `http://localhost:5173` (ou `PLAYWRIGHT_BASE_URL`)
+- `baseURL`: `http://localhost:5173` com `pnpm dev`; em CI, `http://localhost:4173` com `pnpm preview` — o E2E do CI testa o build de produção (ou `PLAYWRIGHT_BASE_URL`)
 - `timeout` por teste: 60 segundos
 - `navigationTimeout`: 30 segundos
 - `actionTimeout`: 15 segundos
@@ -304,8 +305,8 @@ react-vite-template/
 ├── .env.example                     # Modelo de variáveis (commitar)
 ├── .env.local                       # Variáveis locais (NÃO commitar)
 ├── .husky/
-│   ├── pre-commit                   # lint-staged + type-check
-│   └── pre-push                     # vitest run
+│   ├── pre-commit                   # gitleaks + lint-staged + type-check
+│   └── pre-push                     # vitest run (pulado se o push só apaga branches)
 ├── .lintstagedrc.json
 ├── .prettierrc
 ├── .prettierignore
@@ -350,6 +351,7 @@ Aliases configurados em `tsconfig.app.json`, `tsconfig.test.json` e `vite.config
 
 - Node.js >= 20
 - pnpm >= 9 (`npm install -g pnpm`)
+- [gitleaks](https://github.com/gitleaks/gitleaks#installing) — exigido pelo pre-commit (não vem pelo npm)
 
 ### Usando como template
 
@@ -383,6 +385,45 @@ Acesse `http://localhost:5173`.
 7. **`src/App.tsx`** — substituir pelo componente raiz do projeto real
 8. **GitHub** — depois de criar o repositório remoto, aplicar o padrão de configuração (seção abaixo)
 
+### CI (GitHub Actions)
+
+O workflow `.github/workflows/ci.yml` roda em todo PR e em todo push na `main`, com quatro jobs
+em paralelo:
+
+| Job (`name:`)                                 | O que verifica                                                                                     |
+| --------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `Lint, tipos, testes e build`                 | Prettier, ESLint, tipos, testes unitários com cobertura, SonarCloud (quality gate) e build         |
+| `Dependências e segredos`                     | `pnpm audit --audit-level high` e gitleaks no histórico inteiro                                    |
+| `E2E (chromium, firefox, webkit)`             | Playwright nos cinco projetos, contra o build de produção; relatório como artefato                 |
+| `Lighthouse (perf, a11y, boas práticas, SEO)` | Lighthouse CI: acessibilidade, boas práticas e SEO abaixo de 90 quebram o build; performance avisa |
+
+- **SonarCloud é opcional até existir o segredo `SONAR_TOKEN`**: sem ele, o passo é pulado com
+  um aviso, sem quebrar o CI. Organização e chave do projeto são derivadas do nome do repositório
+  (`dono em minúsculas` / `Dono_repo`, o padrão do SonarCloud ao importar do GitHub), então um
+  projeto criado a partir do template não precisa editar o `sonar-project.properties`.
+- **Performance só avisa** porque a nota varia entre execuções na máquina compartilhada do CI;
+  as outras categorias são estáveis. A faixa de 90 a 100 é a que o Lighthouse chama de "boa".
+- A versão do Node vem do `.nvmrc`, a mesma para o CI e para a máquina local.
+
+### Revisão automática (CodeRabbit)
+
+Com o [app do CodeRabbit](https://github.com/apps/coderabbitai) instalado no repositório, o
+`.coderabbit.yaml` define como ele revisa os PRs:
+
+- `profile: chill` — aponta problemas reais, sem comentário de estilo que o ESLint e o Prettier já
+  cobrem.
+- `auto_review.base_branches: ['.*']` — revisa PRs para **qualquer** branch. Sem isso, o
+  CodeRabbit só revisa PRs para a branch padrão e marca "skipping" nos PRs de sub-branch para uma
+  branch de integração (`feat/checkout-cart` → `feat/checkout`).
+
+O CodeRabbit lê esta configuração **da branch do PR**, não da branch de destino. Uma branch criada
+antes de o arquivo existir continua sem ele, e o PR dela segue em "skipping" até receber o arquivo
+(com um merge ou rebase da branch de onde ela saiu). Num projeto criado a partir deste template,
+toda branch já nasce com o arquivo.
+
+Mudanças no arquivo passam pela CLI do CodeRabbit (`coderabbit config validate`), que confere o
+schema oficial.
+
 ### Configurando o repositório no GitHub
 
 O script `scripts/setup-github.mjs` aplica, em um comando, a configuração padrão do GitHub:
@@ -410,6 +451,16 @@ node scripts/setup-github.mjs seu-usuario/meu-projeto \
 
 # Proteger também uma branch de integração
 node scripts/setup-github.mjs seu-usuario/meu-projeto --branch develop --check "nome do job de CI"
+```
+
+Com o CI deste template, os quatro checks são:
+
+```bash
+node scripts/setup-github.mjs seu-usuario/meu-projeto \
+  --check "Lint, tipos, testes e build" \
+  --check "Dependências e segredos" \
+  --check "E2E (chromium, firefox, webkit)" \
+  --check "Lighthouse (perf, a11y, boas práticas, SEO)"
 ```
 
 Cada `--check` é o texto do campo `name:` de um job do workflow de CI. Sem nenhum `--check`, o
@@ -516,12 +567,12 @@ Copie `.env.example` para `.env.local` e preencha conforme necessário.
 
 ### Qualidade de Código
 
-| Comando             | Descrição                                               |
-| ------------------- | ------------------------------------------------------- |
-| `pnpm lint`         | ESLint — falha em qualquer warning (`--max-warnings 0`) |
-| `pnpm lint:fix`     | ESLint com correção automática                          |
-| `pnpm format`       | Prettier — formata todos os arquivos em `src/`          |
-| `pnpm format:check` | Prettier — verifica formatação sem alterar arquivos     |
+| Comando             | Descrição                                                     |
+| ------------------- | ------------------------------------------------------------- |
+| `pnpm lint`         | ESLint — falha em qualquer warning (`--max-warnings 0`)       |
+| `pnpm lint:fix`     | ESLint com correção automática                                |
+| `pnpm format`       | Prettier — formata o repositório (exceto o `.prettierignore`) |
+| `pnpm format:check` | Prettier — verifica formatação sem alterar arquivos           |
 
 ### Testes Unitários (Vitest)
 
@@ -550,11 +601,11 @@ Copie `.env.example` para `.env.local` e preencha conforme necessário.
 
 ### Deploy e Análise
 
-| Comando           | Descrição                                                                 |
-| ----------------- | ------------------------------------------------------------------------- |
-| `pnpm pre-deploy` | Validação completa antes do deploy: type-check + lint + cobertura + build |
-| `pnpm lighthouse` | Lighthouse CI via `lhci autorun`                                          |
-| `pnpm analyze`    | Alias para `build:analyze`                                                |
+| Comando           | Descrição                                                                               |
+| ----------------- | --------------------------------------------------------------------------------------- |
+| `pnpm pre-deploy` | Validação completa antes do deploy: type-check + lint + cobertura + build               |
+| `pnpm lighthouse` | Lighthouse CI sobre o `dist/` (rode `pnpm build` antes); limites em `lighthouserc.json` |
+| `pnpm analyze`    | Alias para `build:analyze`                                                              |
 
 ---
 
@@ -868,22 +919,21 @@ Configuração com **3 contextos separados** — código fonte, testes unitário
 
 ### Git Hooks (Husky + lint-staged)
 
-**`git commit`** — executa lint-staged + type-check:
+**`git commit`** — executa gitleaks + lint-staged + type-check.
+
+Primeiro, `gitleaks git --staged` procura segredos (chave de API, token) no que está sendo commitado e bloqueia o commit se achar, mostrando arquivo e linha com o valor escondido. Sem o gitleaks instalado o commit falha com o link de instalação, em vez de pular a verificação em silêncio. Depois:
 
 ```
 .lintstagedrc.json
-├── *.{js,jsx,ts,tsx}     → eslint --fix + prettier --write
-└── *.{json,md,css,html}  → prettier --write
+├── *.{js,jsx,ts,tsx}                     → eslint --fix + prettier --write
+└── *.{json,md,mdx,css,html,yml,yaml}     → prettier --write
 ```
 
 Após lint-staged, o hook executa `pnpm type-check` para garantir que tipos TypeScript estejam corretos.
 
-**`git push`** — executa todos os testes unitários:
+**`git push`** — executa todos os testes unitários; se falharem, o push é bloqueado com mensagem de erro.
 
-```bash
-pnpm run test
-# Se falhar → push é bloqueado com mensagem de erro
-```
+Quando o push só **apaga** branches (`git push --delete`), os testes são pulados: não há código novo indo para o remoto. O `scripts/push-only-deletes.sh` lê as refs que o Git manda ao hook e só pula quando **todas** são remoções (sha local só de zeros); branch nova, push misto ou entrada estranha rodam os testes.
 
 ---
 

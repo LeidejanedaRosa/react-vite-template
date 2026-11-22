@@ -128,12 +128,13 @@ Documentação da stack tecnológica e decisões arquiteturais do template.
 
 **`pre-commit`:**
 
-1. `pnpm exec lint-staged` — lint e formatação nos arquivos modificados
-2. `pnpm run type-check` — verifica tipos TypeScript em todo o projeto
+1. `gitleaks git --staged` — bloqueia o commit se houver segredo no que está staged (falha se o gitleaks não estiver instalado)
+2. `pnpm exec lint-staged` — lint e formatação nos arquivos modificados
+3. `pnpm run type-check` — verifica tipos TypeScript em todo o projeto
 
 **`pre-push`:**
 
-1. `pnpm run test` — executa todos os testes unitários
+1. `pnpm run test` — executa todos os testes unitários; pulado quando o push só apaga branches (`scripts/push-only-deletes.sh`)
 
 Se qualquer hook falhar, a operação Git é bloqueada.
 
@@ -295,10 +296,11 @@ if (import.meta.env.PROD) {
 
 **Por que foi escolhido:**
 
-- **5 categorias:** Performance, Acessibilidade, Boas Práticas, SEO e PWA
+- **Categorias:** Performance, Acessibilidade, Boas Práticas e SEO (a de PWA saiu no Lighthouse 12; o 13 trouxe Agentic Browsing, ainda sem limite aqui)
+- **Limites (`lighthouserc.json`):** 90 em cada categoria, a faixa "boa" do Lighthouse. Acessibilidade, Boas Práticas e SEO quebram o build; Performance só avisa, porque varia entre execuções no CI
 - **Histórico:** Compara scores entre deploys para detectar regressões
 - **Padrão do Google:** As mesmas métricas usadas para ranking no Google Search
-- **Fácil integração:** Plugin `@lhci/cli` rodando com `pnpm lighthouse`
+- **Fácil integração:** Plugin `@lhci/cli` rodando com `pnpm lighthouse` sobre o `dist/`; no CI, relatórios como artefato (sem o armazenamento público temporário do lhci)
 
 ---
 
@@ -367,7 +369,7 @@ Threshold de 80% obrigatório. Cobertura mede o que foi testado, não o que func
 
 ### 5. Qualidade no commit, não no PR
 
-lint-staged + type-check no pre-commit garantem que código mal formatado ou com erros de tipo nunca chega ao repositório.
+gitleaks + lint-staged + type-check no pre-commit garantem que segredo, código mal formatado ou com erro de tipo nunca chega ao repositório. O CI repete as mesmas verificações, porque o hook local pode não existir em outra máquina.
 
 ### 6. Separação clara de contextos
 

@@ -218,12 +218,14 @@ Componentes básicos e reutilizáveis em qualquer contexto.
 **Localização:** `src/components/ui/`
 
 **Exemplos:**
+
 - Button, Input, Checkbox, Select
 - Card, Badge, Avatar
 - Modal, Dialog, Drawer
 - Tooltip, Popover, Dropdown
 
 **Estrutura:**
+
 ```
 components/ui/Button/
 ├── Button.tsx           # Componente
@@ -238,6 +240,7 @@ Componentes estruturais que definem o layout.
 **Localização:** `src/components/layout/`
 
 **Exemplos:**
+
 - Header, Footer, Sidebar
 - Container, Grid, Stack
 - Navigation, Breadcrumbs
@@ -249,12 +252,14 @@ Código relacionado a uma funcionalidade específica.
 **Localização:** `src/features/{feature-name}/`
 
 **Quando criar uma feature:**
+
 - ✅ Funcionalidade tem múltiplos componentes relacionados
 - ✅ Tem lógica de negócio específica
 - ✅ Tem suas próprias chamadas de API
 - ✅ Pode crescer em complexidade
 
 **Exemplo: Feature de Auth**
+
 ```
 features/auth/
 ├── components/          # Componentes específicos de auth
@@ -269,6 +274,7 @@ features/auth/
 ```
 
 **API Pública da Feature:**
+
 ```typescript
 // features/auth/index.ts
 export { LoginForm, RegisterForm } from './components'
@@ -278,6 +284,7 @@ export type { User, AuthState } from './types'
 ```
 
 **Como usar:**
+
 ```typescript
 // Em outro arquivo
 import { LoginForm, useAuth } from '@/features/auth'
@@ -290,11 +297,13 @@ Páginas são composições de componentes e features.
 **Localização:** `src/pages/`
 
 **Características:**
+
 - Orquestram múltiplas features
 - Mínima lógica de negócio (delegam para hooks/services)
 - Focadas em layout e composição
 
 **Exemplo:**
+
 ```typescript
 // pages/ProductsPage.tsx
 import { ProductList, ProductFilters } from '@/features/products'
@@ -317,6 +326,7 @@ Hooks reutilizáveis que não pertencem a uma feature específica.
 **Localização:** `src/hooks/`
 
 **Exemplos:**
+
 - `useLocalStorage` - Sincroniza estado com localStorage
 - `useMediaQuery` - Detecta breakpoints
 - `useDebounce` - Debounce de valores
@@ -329,6 +339,7 @@ Lógica de comunicação com APIs e integrações externas.
 **Localização:** `src/services/` (globais) ou `src/features/{feature}/services/` (específicos)
 
 **Exemplo:**
+
 ```typescript
 // services/api/client.ts
 import axios from 'axios'
@@ -358,6 +369,7 @@ Funções puras e reutilizáveis.
 **Localização:** `src/utils/`
 
 **Organização por categoria:**
+
 ```
 utils/
 ├── format/
@@ -376,6 +388,7 @@ utils/
 ## Quando Usar Cada Abordagem
 
 ### Landing Page Simples
+
 ```
 src/
 ├── components/ui/       # Botões, Cards, etc
@@ -385,6 +398,7 @@ src/
 ```
 
 ### E-commerce Médio
+
 ```
 src/
 ├── components/         # UI + Layout
@@ -397,6 +411,7 @@ src/
 ```
 
 ### Aplicação Complexa
+
 ```
 src/
 ├── components/         # UI + Layout
@@ -423,13 +438,13 @@ src/
 Use `index.ts` para criar uma API limpa de cada módulo:
 
 ```typescript
+// Uso
+import { Button, Card, Input } from '@/components/ui'
+
 // components/ui/index.ts
 export { Button } from './Button'
 export { Input } from './Input'
 export { Card } from './Card'
-
-// Uso
-import { Button, Input, Card } from '@/components/ui'
 ```
 
 ### 2. Colocação (Colocation)
@@ -448,6 +463,7 @@ ProductCard/
 ### 3. Evite `shared/` ou `common/`
 
 Em vez de pastas genéricas, seja específico:
+
 - ❌ `shared/components/`
 - ✅ `components/ui/` ou `components/layout/`
 
@@ -489,6 +505,7 @@ import { formatCurrency } from '@/utils/format'
 ### De Landing Page para E-commerce
 
 **Passo 1:** Comece simples
+
 ```
 src/
 ├── components/
@@ -497,6 +514,7 @@ src/
 ```
 
 **Passo 2:** Adicione features conforme necessário
+
 ```
 src/
 ├── components/
@@ -507,6 +525,7 @@ src/
 ```
 
 **Passo 3:** Expanda features
+
 ```
 src/
 ├── components/
@@ -605,12 +624,12 @@ export default function ProductsPage() {
   return (
     <Container>
       <h1>Nossos Produtos</h1>
-      
+
       <div className="grid grid-cols-4 gap-6">
         <aside>
           <ProductFilters filters={filters} onChange={setFilters} />
         </aside>
-        
+
         <main className="col-span-3">
           <ProductList products={products} isLoading={isLoading} />
         </main>

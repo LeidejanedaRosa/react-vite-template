@@ -1,16 +1,21 @@
 /// <reference types="node" />
 import { defineConfig, devices } from '@playwright/test'
 
+const isCI = !!process.env.CI
+// No CI os testes rodam contra o build de produção (vite preview), que é o que vai ao ar.
+const port = isCI ? 4173 : 5173
+const baseURL = process.env.PLAYWRIGHT_BASE_URL || `http://localhost:${port}`
+
 export default defineConfig({
   testDir: './tests',
-  fullyParallel: !process.env.CI,
-  forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  fullyParallel: !isCI,
+  forbidOnly: isCI,
+  retries: isCI ? 2 : 0,
+  workers: isCI ? 1 : undefined,
   reporter: 'html',
   timeout: 60 * 1000,
   use: {
-    baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:5173',
+    baseURL,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
@@ -21,6 +26,10 @@ export default defineConfig({
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
+    },
+    {
+      name: 'firefox',
+      use: { ...devices['Desktop Firefox'] },
     },
     {
       name: 'webkit',
@@ -36,9 +45,9 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'pnpm dev',
-    url: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:5173',
-    reuseExistingServer: !process.env.CI,
+    command: isCI ? 'pnpm preview --strictPort' : 'pnpm dev',
+    url: baseURL,
+    reuseExistingServer: !isCI,
     timeout: 120 * 1000,
   },
 })

@@ -7,6 +7,12 @@ on:
     - cron: '0 12 1 1,4,7,10 *'
   workflow_dispatch:
 
+# Grupo fixo, sem a branch: toda execução escreve na mesma lista de issues. Sem fila, uma manual
+# e uma agendada leriam "nenhuma aberta" ao mesmo tempo e criariam duas.
+concurrency:
+  group: maintenance-reminder
+  cancel-in-progress: false
+
 permissions:
   issues: write
 

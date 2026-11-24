@@ -24,7 +24,7 @@ jobs:
     name: Lint, tipos, testes e build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
           # O SonarCloud usa o histórico para saber o que é código novo em cada PR.
@@ -70,7 +70,7 @@ jobs:
     name: Dependências e segredos
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
           # O gitleaks varre o histórico inteiro, não só o último commit.
@@ -93,7 +93,7 @@ jobs:
     name: E2E (chromium, firefox, webkit)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
       - uses: pnpm/action-setup@v4
@@ -117,7 +117,7 @@ jobs:
     name: Lighthouse (perf, a11y, boas práticas, SEO)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
       - uses: pnpm/action-setup@v4

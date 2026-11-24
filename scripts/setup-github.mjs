@@ -218,13 +218,17 @@ step('Repositório encontrado', () => gh('GET', ''), { required: true })
 
 if (failures.length === 0) {
   step(
-    'Merge só por merge commit; branch apagada após o merge',
+    'Merge só por merge commit, com o título do PR; branch apagada após o merge',
     () =>
       gh('PATCH', '', {
         allow_merge_commit: true,
         allow_squash_merge: false,
         allow_rebase_merge: false,
         delete_branch_on_merge: true,
+        // Título do PR ("feat: x (#12)") segue o conventional commit no log; corpo vazio porque
+        // os commits da branch já ficam no histórico e o #12 leva ao PR com os detalhes.
+        merge_commit_title: 'PR_TITLE',
+        merge_commit_message: 'BLANK',
       }),
     { required: true }
   )

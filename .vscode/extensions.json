@@ -7,6 +7,8 @@
     "vitest.explorer",
     "usernamehw.errorlens",
     "christian-kohler.path-intellisense",
-    "dsznajder.es7-react-js-snippets"
+    "dsznajder.es7-react-js-snippets",
+    "coderabbit.coderabbit-vscode",
+    "sonarsource.sonarlint-vscode"
   ]
 }

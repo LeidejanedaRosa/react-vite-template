@@ -432,6 +432,7 @@ O script `scripts/setup-github.mjs` aplica, em um comando, a configuração padr
 | -------------------------------------------------- | ---------------------------------------------------------------- |
 | Proteção da branch padrão (e das que você indicar) | Sem push direto, sem apagar a branch, sem reescrever histórico   |
 | Merge só por merge commit                          | Os commits de cada PR continuam visíveis no histórico            |
+| Merge commit com o título do PR e corpo vazio      | O log mostra `feat: x (#12)`, no padrão conventional commit      |
 | Verificações obrigatórias (só com `--check`)       | O merge só libera quando todas as verificações informadas passam |
 | Branch apagada após o merge                        | A lista de branches não acumula                                  |
 | Dependabot                                         | Alertas de vulnerabilidade e PRs de correção                     |

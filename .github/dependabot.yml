@@ -1,0 +1,28 @@
+# O template é a base de todo projeto novo: dependência velha aqui nasce velha em todos.
+# Mensal e agrupado para virar um PR por ecossistema, não um por pacote. Majors ficam fora do
+# grupo porque cada um pede leitura do changelog (ver skill /revisar-padroes).
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: monthly
+    labels: [chore]
+    commit-message:
+      prefix: chore
+      include: scope
+    groups:
+      minor-and-patch:
+        update-types: [minor, patch]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    labels: [ci]
+    commit-message:
+      prefix: ci
+    groups:
+      actions:
+        patterns: ['*']
+        update-types: [minor, patch]

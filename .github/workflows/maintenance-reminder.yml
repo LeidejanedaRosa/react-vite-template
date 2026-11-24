@@ -1,0 +1,46 @@
+name: Lembrete de revisão de padrões
+
+# Regra escrita fica velha em silêncio. Uma issue por trimestre põe a revisão na fila, com o
+# roteiro da skill /revisar-padroes, em vez de depender de alguém lembrar.
+on:
+  schedule:
+    - cron: '0 12 1 1,4,7,10 *'
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  reminder:
+    name: Abrir issue de revisão trimestral
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      LABEL: manutencao
+    steps:
+      - name: Garantir a label
+        run: gh label create "$LABEL" --color FBCA04 --description "Revisão periódica de padrões" --force
+
+      # Issue anterior ainda aberta quer dizer revisão atrasada: não empilhar outra.
+      - name: Abrir a issue, se não houver uma aberta
+        run: |
+          open=$(gh issue list --label "$LABEL" --state open --json number --jq 'length')
+          if [ "$open" -gt 0 ]; then
+            echo "::notice::Já existe revisão aberta: nenhuma issue nova."
+            exit 0
+          fi
+
+          gh issue create \
+            --title "chore: revisão trimestral de padrões ($(date -u +%Y-%m))" \
+            --label "$LABEL" \
+            --body "$(cat <<'EOF'
+          Rodar `/revisar-padroes` no Claude Code e seguir o roteiro:
+
+          - [ ] Referências: WCAG, Testing Library, Playwright, OWASP, Node LTS, Lighthouse, SEO
+          - [ ] Regras e skills do `~/.claude` conferidas contra as referências
+          - [ ] Template: `pnpm outdated`, `pnpm audit`, majors avaliados, PRs do Dependabot resolvidos
+          - [ ] Projetos ativos comparados com o template; alinhamentos em PRs próprios
+          - [ ] `docs/CHANGELOG.md` atualizado com o que mudou e por quê
+          EOF
+          )"

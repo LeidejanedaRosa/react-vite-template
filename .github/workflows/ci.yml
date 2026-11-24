@@ -29,7 +29,7 @@ jobs:
           persist-credentials: false
           # O SonarCloud usa o histórico para saber o que é código novo em cada PR.
           fetch-depth: 0
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
@@ -75,7 +75,7 @@ jobs:
           persist-credentials: false
           # O gitleaks varre o histórico inteiro, não só o último commit.
           fetch-depth: 0
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
       - run: pnpm audit --audit-level high
       # Binário com versão e sha256 fixos, em vez de uma action de terceiros com acesso ao job.
       - name: Secret scan (gitleaks)
@@ -96,7 +96,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
@@ -120,7 +120,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc

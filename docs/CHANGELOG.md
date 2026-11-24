@@ -23,6 +23,14 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - `pnpm format` e `pnpm format:check` cobrem o repositório inteiro, não só `src/`
 - `setup-github.mjs` liga o CodeQL só com as linguagens que existem no repositório (lista explícita) e avisa quando ele ficou ligado para uma linguagem que saiu — caso real: o repositório do perfil perdeu o único workflow e a análise de `actions` passou a falhar em todo PR
 
+### 🔄 Dependências
+
+- Primeira rodada do Dependabot (PRs #15–#23), testada em conjunto numa branch só: cada PR passou no CI sozinho, mas a combinação nunca tinha sido testada
+- Actions: `checkout`, `setup-node` e `upload-artifact` → v7, `pnpm/action-setup` → v6 (runtime Node 24)
+- Ferramentas: TypeScript 5.9 → 6.0, `@vitejs/plugin-react` 4 → 5, `eslint-plugin-security` 3 → 4, `eslint-plugin-react-refresh` 0.4 → 0.5, `prettier-plugin-tailwindcss` 0.6 → 0.8
+- `web-vitals` 4 → 6: as funções usadas (`onCLS`, `onFCP`, `onINP`, `onLCP`, `onTTFB`) continuam; o teste unitário usa mock, quem confirma o pacote real é o e2e
+- Ainda na fila: ESLint 9 sem suporte (→ 10), TypeScript 7, `@vitejs/plugin-react` 6
+
 ### 🔒 Segurança
 
 - `pnpm audit` de 82 alertas (1 crítico, 47 altos) para zero, todos em ferramentas de dev — `pnpm audit --prod` já estava limpo, nada chegava ao navegador

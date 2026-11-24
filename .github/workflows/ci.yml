@@ -106,7 +106,7 @@ jobs:
       # Com CI=true (definido pelo GitHub), o Playwright serve este build com vite preview.
       - run: pnpm run build
       - run: pnpm run test:e2e
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
         with:
           name: playwright-report
@@ -128,7 +128,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm run build
       - run: pnpm run lighthouse
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
         with:
           name: lighthouse-report

@@ -9,6 +9,8 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ### ✨ Adicionado
 
+- `.github/pull_request_template.md`: o template de PR padrão de todos os repositórios (fonte: `~/.claude/CLAUDE.md`), com os tipos `test` e `chore / build / ci` e as linhas de segredos e de `DECISIONS`/`TROUBLESHOOTING` no checklist de qualidade
+- `docs/TROUBLESHOOTING.md`, vazio, com o formato das entradas (sintoma, causa raiz, solução, regra prática); README passa a listar ele e o `DECISIONS.md`
 - Workflow `pr-title.yml`: o commitlint valida o título do PR (que vira o merge commit), também ao editar o PR, já com o ` (#N)` do merge. O título entra por variável de ambiente, contra script injection. Novo check exigido: `Título do PR (Conventional Commits)`
 - commitlint no hook `commit-msg` (`@commitlint/cli` 21 + `config-conventional`), com a primeira linha limitada a 72 caracteres: o título do PR vira a mensagem do merge commit. Antes, o padrão de commit dependia só de lembrar
 - `setup-github.mjs` padroniza o merge commit: título = título do PR (`chore: x (#14)`, no padrão conventional commit, em vez de "Merge pull request #14 from ..."), corpo vazio — os commits da branch já ficam no histórico e o número leva ao PR

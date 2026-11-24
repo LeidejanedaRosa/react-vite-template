@@ -1020,6 +1020,8 @@ pnpm test:seo            # SEO, acessibilidade e performance
 | [docs/FOLDER-STRUCTURE.md](docs/FOLDER-STRUCTURE.md)   | Convenções e padrões para escalar de landing page a app complexa |
 | [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)           | Guia de contribuição e padrões de commit                         |
 | [docs/CHANGELOG.md](docs/CHANGELOG.md)                 | Histórico de versões                                             |
+| [docs/DECISIONS.md](docs/DECISIONS.md)                 | Decisões de tooling e configuração, com alternativas rejeitadas  |
+| [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)     | Erros já resolvidos: sintoma, causa raiz e solução               |
 | [docs/BETTER-AUTH-GUIDE.md](docs/BETTER-AUTH-GUIDE.md) | Guia de autenticação com Better Auth                             |
 | [docs/TESTES-SEO.md](docs/TESTES-SEO.md)               | Guia das suites de testes de SEO e acessibilidade                |
 | [tests/seo/README.md](tests/seo/README.md)             | Documentação detalhada de cada suite de teste E2E                |

@@ -1,0 +1,40 @@
+name: Título do PR
+
+# O título do PR vira a mensagem do merge commit na main, mas é digitado no GitHub e não passa pelo
+# hook commit-msg. Workflow próprio para rodar também ao editar o PR, sem refazer o CI inteiro.
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+concurrency:
+  group: pr-title-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  HUSKY: 0
+
+jobs:
+  title:
+    name: Título do PR (Conventional Commits)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # O título é texto de quem abriu o PR: entra por variável de ambiente, nunca interpolado no
+      # script com ${{ }}, que o colaria como código (script injection). Valida já com o " (#N)" que
+      # o GitHub acrescenta, porque o limite de 72 vale para a mensagem final.
+      - name: Validar com o commitlint
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: printf '%s (#%s)\n' "$PR_TITLE" "$PR_NUMBER" | pnpm exec commitlint --verbose

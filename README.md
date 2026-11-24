@@ -406,6 +406,13 @@ em paralelo:
   as outras categorias são estáveis. A faixa de 90 a 100 é a que o Lighthouse chama de "boa".
 - A versão do Node vem do `.nvmrc`, a mesma para o CI e para a máquina local.
 
+O workflow `.github/workflows/pr-title.yml` (job `Título do PR (Conventional Commits)`) valida o
+título do PR com o mesmo commitlint do hook `commit-msg`. O título vira a mensagem do merge commit
+na `main`, mas é digitado no GitHub e não passa pelo hook. Ele roda também quando o PR é editado,
+sem refazer o CI inteiro, e valida o título já com o ` (#N)` que o GitHub acrescenta no merge. O
+título entra no script por variável de ambiente, nunca por `${{ }}` dentro do `run:`, que o
+colaria como código (script injection).
+
 ### Revisão automática (CodeRabbit)
 
 Com o [app do CodeRabbit](https://github.com/apps/coderabbitai) instalado no repositório, o
@@ -455,14 +462,15 @@ node scripts/setup-github.mjs seu-usuario/meu-projeto \
 node scripts/setup-github.mjs seu-usuario/meu-projeto --branch develop --check "nome do job de CI"
 ```
 
-Com o CI deste template, os quatro checks são:
+Com o CI deste template, os cinco checks são:
 
 ```bash
 node scripts/setup-github.mjs seu-usuario/meu-projeto \
   --check "Lint, tipos, testes e build" \
   --check "Dependências e segredos" \
   --check "E2E (chromium, firefox, webkit)" \
-  --check "Lighthouse (perf, a11y, boas práticas, SEO)"
+  --check "Lighthouse (perf, a11y, boas práticas, SEO)" \
+  --check "Título do PR (Conventional Commits)"
 ```
 
 Cada `--check` é o texto do campo `name:` de um job do workflow de CI. Sem nenhum `--check`, o

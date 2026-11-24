@@ -48,7 +48,7 @@ Obrigado por considerar contribuir para este projeto! Este guia vai te ajudar a 
 
 Certifique-se de ter instalado:
 
-- Node.js 20.x ou superior
+- Node.js 22.12 ou superior (o `.nvmrc` fixa o 24)
 - pnpm 9.x ou superior
 - Git 2.x ou superior
 

@@ -350,7 +350,7 @@ Aliases configurados em `tsconfig.app.json`, `tsconfig.test.json` e `vite.config
 
 ### Pré-requisitos
 
-- Node.js >= 20
+- Node.js >= 22.12 (o `.nvmrc` fixa o 24, usado no CI)
 - pnpm >= 9 (`npm install -g pnpm`)
 - [gitleaks](https://github.com/gitleaks/gitleaks#installing) — exigido pelo pre-commit (não vem pelo npm)
 

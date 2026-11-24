@@ -9,6 +9,9 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ### ✨ Adicionado
 
+- Lembrete trimestral (`.github/workflows/maintenance-reminder.yml`): abre a issue "revisão trimestral de padrões", com label `manutencao`, nos dias 1 de jan/abr/jul/out, e não abre outra enquanto a anterior estiver aberta. O roteiro é a skill `/revisar-padroes` do Claude Code
+- Dependabot version updates (`.github/dependabot.yml`), mensal: um PR agrupado de minor/patch para npm e outro para as actions; majors chegam separados, para leitura do changelog. Exceção à regra "só em projeto estável": o template é a base de todo projeto novo
+- `.vscode/extensions.json` recomenda CodeRabbit e SonarLint, para a revisão começar no editor
 - `.coderabbit.yaml`: revisão no perfil `chill` e em PRs para qualquer branch, inclusive as de integração (antes ficavam em "skipping")
 - pre-push pula os testes quando o push só apaga branches (`scripts/push-only-deletes.sh`, com testes); branch nova, push misto ou entrada estranha continuam rodando
 - Secret scan com `gitleaks git --staged` no pre-commit, antes do lint; sem o binário o commit falha com o link de instalação. O CI já varre o histórico inteiro

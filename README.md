@@ -423,6 +423,9 @@ Com o [app do CodeRabbit](https://github.com/apps/coderabbitai) instalado no rep
 - `auto_review.base_branches: ['.*']` — revisa PRs para **qualquer** branch. Sem isso, o
   CodeRabbit só revisa PRs para a branch padrão e marca "skipping" nos PRs de sub-branch para uma
   branch de integração (`feat/checkout-cart` → `feat/checkout`).
+- `path_instructions` para `package.json` e `pnpm-lock.yaml` — avisa que o CI já roda
+  `pnpm install --frozen-lockfile`. Sem isso, o CodeRabbit perguntava em todo PR de dependência
+  se o lockfile estava sincronizado.
 
 O CodeRabbit lê esta configuração **da branch do PR**, não da branch de destino. Uma branch criada
 antes de o arquivo existir continua sem ele, e o PR dela segue em "skipping" até receber o arquivo

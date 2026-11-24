@@ -46,6 +46,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ### 🐛 Corrigido
 
+- `engines.node` de `>=20.0.0` para `>=22.12.0`: o commitlint 21 exige Node 22.12, então Node 20 passava no `engines` e falhava no primeiro commit. README e CONTRIBUTING acompanham
 - Mensagem "❌ Testes falharam" do pre-push nunca aparecia: com `sh -e` (Husky 9), o teste que falha encerra o hook antes do `if [ $? -ne 0 ]`. A falha agora é tratada no `if !`. O SETUP-GUIDE ainda mostrava os dois hooks no formato do Husky 8
 - `tsc -b` deixava `src/lib/sentryBuild.d.ts` dentro de `src/` (o lint quebrava se rodasse depois do build): as declarações do `tsconfig.node.json` vão para `node_modules/.tmp`, e a regra `*.config.d.ts` saiu do `.gitignore`
 - Página inicial com os landmarks que faltavam (`header`, `nav`, `main`, `footer`): o link "Pular para o conteúdo principal" do `index.html` apontava para `#main-content`, que não existia (WCAG 2.4.1). `SiteHeader` e `SiteFooter` novos em `components/layout`; o `main` é o `MainContent` que já existia

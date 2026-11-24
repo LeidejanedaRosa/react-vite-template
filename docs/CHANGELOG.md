@@ -9,6 +9,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ### ✨ Adicionado
 
+- Workflow `pr-title.yml`: o commitlint valida o título do PR (que vira o merge commit), também ao editar o PR, já com o ` (#N)` do merge. O título entra por variável de ambiente, contra script injection. Novo check exigido: `Título do PR (Conventional Commits)`
 - commitlint no hook `commit-msg` (`@commitlint/cli` 21 + `config-conventional`), com a primeira linha limitada a 72 caracteres: o título do PR vira a mensagem do merge commit. Antes, o padrão de commit dependia só de lembrar
 - `setup-github.mjs` padroniza o merge commit: título = título do PR (`chore: x (#14)`, no padrão conventional commit, em vez de "Merge pull request #14 from ..."), corpo vazio — os commits da branch já ficam no histórico e o número leva ao PR
 - Lembrete trimestral (`.github/workflows/maintenance-reminder.yml`): abre a issue "revisão trimestral de padrões", com label `manutencao`, nos dias 1 de jan/abr/jul/out, e não abre outra enquanto a anterior estiver aberta. O roteiro é a skill `/revisar-padroes` do Claude Code

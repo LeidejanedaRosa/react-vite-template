@@ -1,0 +1,3 @@
+echo "📋 Checando padrão de commit (Conventional Commits)..."
+
+pnpm exec commitlint --edit "$1"

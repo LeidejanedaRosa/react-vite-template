@@ -306,6 +306,7 @@ react-vite-template/
 ├── .env.local                       # Variáveis locais (NÃO commitar)
 ├── .husky/
 │   ├── pre-commit                   # gitleaks + lint-staged + type-check
+│   ├── commit-msg                   # commitlint (Conventional Commits)
 │   └── pre-push                     # vitest run (pulado se o push só apaga branches)
 ├── .lintstagedrc.json
 ├── .prettierrc
@@ -931,6 +932,8 @@ Primeiro, `gitleaks git --staged` procura segredos (chave de API, token) no que 
 ```
 
 Após lint-staged, o hook executa `pnpm type-check` para garantir que tipos TypeScript estejam corretos.
+
+**Mensagem do commit** (`commit-msg`) — o commitlint barra mensagem fora do [Conventional Commits](https://www.conventionalcommits.org/): sem tipo, tipo ou assunto com maiúscula, ponto no final ou primeira linha acima de 72 caracteres (o título do PR vira a mensagem do merge commit, e o GitHub corta em 72). Mensagens de merge geradas pelo git passam. Regras em `commitlint.config.js`.
 
 **`git push`** — executa todos os testes unitários; se falharem, o push é bloqueado com mensagem de erro.
 

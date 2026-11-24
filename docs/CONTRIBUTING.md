@@ -402,6 +402,9 @@ motivação e impacto da mudança.
 Refs: #123
 ```
 
+O hook `commit-msg` (commitlint) recusa o commit fora deste formato. A primeira linha tem no
+máximo 72 caracteres, em inglês, com tipo e assunto em minúsculas e sem ponto final.
+
 #### Tipos de Commit
 
 - **feat:** Nova funcionalidade
@@ -411,7 +414,9 @@ Refs: #123
 - **refactor:** Refatoração de código (não adiciona feature nem corrige bug)
 - **perf:** Melhorias de performance
 - **test:** Adiciona ou corrige testes
-- **chore:** Mudanças em build, configs, dependências
+- **chore:** Mudanças em configs e dependências
+- **build:** Sistema de build ou dependências que mudam o build
+- **ci:** Workflows do GitHub Actions
 
 #### Exemplos
 

@@ -9,6 +9,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ### ✨ Adicionado
 
+- `.coderabbit.yaml`: instrução para `package.json` e `pnpm-lock.yaml` — o CI já roda `pnpm install --frozen-lockfile`, então o CodeRabbit não precisa perguntar se o lockfile está sincronizado (falso positivo nos PRs #25 e #27). `.gitignore` ignora os backups `.coderabbit-recovery-*/` da CLI
 - `.github/pull_request_template.md`: o template de PR padrão de todos os repositórios (fonte: `~/.claude/CLAUDE.md`), com os tipos `test` e `chore / build / ci` e as linhas de segredos e de `DECISIONS`/`TROUBLESHOOTING` no checklist de qualidade
 - `docs/TROUBLESHOOTING.md`, vazio, com o formato das entradas (sintoma, causa raiz, solução, regra prática); README passa a listar ele e o `DECISIONS.md`
 - Workflow `pr-title.yml`: o commitlint valida o título do PR (que vira o merge commit), também ao editar o PR, já com o ` (#N)` do merge. O título entra por variável de ambiente, contra script injection. Novo check exigido: `Título do PR (Conventional Commits)`

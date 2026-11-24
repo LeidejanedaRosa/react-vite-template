@@ -29,7 +29,8 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - Actions: `checkout`, `setup-node` e `upload-artifact` → v7, `pnpm/action-setup` → v6 (runtime Node 24)
 - Ferramentas: TypeScript 5.9 → 6.0, `@vitejs/plugin-react` 4 → 5, `eslint-plugin-security` 3 → 4, `eslint-plugin-react-refresh` 0.4 → 0.5, `prettier-plugin-tailwindcss` 0.6 → 0.8
 - `web-vitals` 4 → 6: as funções usadas (`onCLS`, `onFCP`, `onINP`, `onLCP`, `onTTFB`) continuam; o teste unitário usa mock, quem confirma o pacote real é o e2e
-- Ainda na fila: ESLint 9 sem suporte (→ 10), TypeScript 7, `@vitejs/plugin-react` 6
+- Ainda na fila: TypeScript 7, `@vitejs/plugin-react` 6
+- ESLint 10 adiado: quebra o `eslint-plugin-react` (ver [DECISIONS](DECISIONS.md), 2026-11-24)
 
 ### 🔒 Segurança
 

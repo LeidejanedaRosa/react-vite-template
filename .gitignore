@@ -49,3 +49,6 @@ build
 
 # Lighthouse CI
 .lighthouseci
+
+# Backup que o `coderabbit config` deixa ao salvar o .coderabbit.yaml
+.coderabbit-recovery-*/

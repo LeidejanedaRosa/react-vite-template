@@ -14,6 +14,10 @@ describe('gitleaks-version-ok.sh', () => {
     }
   )
 
+  it('ignora a quebra de linha final, que é só o terminador da saída do comando', () => {
+    expect(accepts('8.30.1\n')).toBe(true)
+  })
+
   it.each(['8.19.3', '8.19.0'])(
     'recusa a %s, em que o --staged varre só o histórico',
     version => {

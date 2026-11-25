@@ -934,7 +934,7 @@ Configuração com **3 contextos separados** — código fonte, testes unitário
 
 **`git commit`** — executa gitleaks + lint-staged + type-check.
 
-Primeiro, `gitleaks git --staged` procura segredos (chave de API, token) no que está sendo commitado e bloqueia o commit se achar, mostrando arquivo e linha com o valor escondido. Sem o gitleaks instalado o commit falha com o link de instalação, em vez de pular a verificação em silêncio. Com gitleaks anterior à 8.20 também falha: até a 8.19, o `--staged` é ignorado e só o histórico é varrido, então um segredo novo passaria como "tudo limpo". Depois:
+Primeiro, `gitleaks git --staged` procura segredos (chave de API, token) no que está sendo commitado e bloqueia o commit se achar, mostrando arquivo e linha com o valor escondido. Sem o gitleaks instalado o commit falha com o link de instalação, em vez de pular a verificação em silêncio. Com gitleaks anterior à 8.20 também falha: até a 8.19, o `--staged` é ignorado e só o histórico é varrido, então um segredo novo passaria como "tudo limpo". A checagem fica em `scripts/gitleaks-version-ok.sh` (com testes): compara por versão (`sort -V`, para 8.9.0 não parecer mais nova que 8.20.0) e recusa saída que não é número, como a de um build sem versão. Depois:
 
 ```
 .lintstagedrc.json

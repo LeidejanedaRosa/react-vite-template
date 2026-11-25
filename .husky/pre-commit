@@ -5,6 +5,11 @@ if ! command -v gitleaks >/dev/null 2>&1; then
   echo "❌ gitleaks não encontrado. Instale: https://github.com/gitleaks/gitleaks#installing" >&2
   exit 1
 fi
+gitleaks_version="$(gitleaks version)"
+if ! sh scripts/gitleaks-version-ok.sh "$gitleaks_version"; then
+  echo "❌ gitleaks \"$gitleaks_version\" não serve: o pre-commit exige um release 8.20 ou mais novo (até a 8.19, o --staged é ignorado). Instale: https://github.com/gitleaks/gitleaks#installing" >&2
+  exit 1
+fi
 gitleaks git --staged --redact --no-banner --verbose
 
 echo "📝 Checando lint e formatação..."

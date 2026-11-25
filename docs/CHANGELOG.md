@@ -46,6 +46,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ### 🐛 Corrigido
 
+- pre-commit exige gitleaks 8.20 ou mais novo: até a 8.19, `gitleaks git --staged` ignora o `--staged` e varre só o histórico, e um segredo recém-adicionado passava como "tudo limpo". A versão é comparada com `sort -V`. Achado pelo CodeRabbit no alinhamento dos hooks do faladoria-web
 - Job "Dependências e segredos": o `pnpm audit` rodava antes do gitleaks, e um alerta de dependência fazia a busca por segredos ser pulada. Agora o gitleaks vai primeiro e o audit (com a instalação do pnpm) tem `if: !cancelled()`: os dois rodam sempre, e o job falha se qualquer um falhar. Achado pelo CodeRabbit no PR #91 do faladoria-web
 - `engines.node` de `>=20.0.0` para `>=22.12.0`: o commitlint 21 exige Node 22.12, então Node 20 passava no `engines` e falhava no primeiro commit. README e CONTRIBUTING acompanham
 - Mensagem "❌ Testes falharam" do pre-push nunca aparecia: com `sh -e` (Husky 9), o teste que falha encerra o hook antes do `if [ $? -ne 0 ]`. A falha agora é tratada no `if !`. O SETUP-GUIDE ainda mostrava os dois hooks no formato do Husky 8

@@ -352,7 +352,7 @@ Aliases configurados em `tsconfig.app.json`, `tsconfig.test.json` e `vite.config
 
 - Node.js >= 22.12 (o `.nvmrc` fixa o 24, usado no CI)
 - pnpm >= 9 (`npm install -g pnpm`)
-- [gitleaks](https://github.com/gitleaks/gitleaks#installing) — exigido pelo pre-commit (não vem pelo npm)
+- [gitleaks](https://github.com/gitleaks/gitleaks#installing) 8.20 ou mais novo — exigido pelo pre-commit (não vem pelo npm)
 
 ### Usando como template
 
@@ -934,7 +934,7 @@ Configuração com **3 contextos separados** — código fonte, testes unitário
 
 **`git commit`** — executa gitleaks + lint-staged + type-check.
 
-Primeiro, `gitleaks git --staged` procura segredos (chave de API, token) no que está sendo commitado e bloqueia o commit se achar, mostrando arquivo e linha com o valor escondido. Sem o gitleaks instalado o commit falha com o link de instalação, em vez de pular a verificação em silêncio. Depois:
+Primeiro, `gitleaks git --staged` procura segredos (chave de API, token) no que está sendo commitado e bloqueia o commit se achar, mostrando arquivo e linha com o valor escondido. Sem o gitleaks instalado o commit falha com o link de instalação, em vez de pular a verificação em silêncio. Com gitleaks anterior à 8.20 também falha: até a 8.19, o `--staged` é ignorado e só o histórico é varrido, então um segredo novo passaria como "tudo limpo". Depois:
 
 ```
 .lintstagedrc.json

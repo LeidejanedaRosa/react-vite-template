@@ -75,8 +75,6 @@ jobs:
           persist-credentials: false
           # O gitleaks varre o histórico inteiro, não só o último commit.
           fetch-depth: 0
-      - uses: pnpm/action-setup@v6
-      - run: pnpm audit --audit-level high
       # Binário com versão e sha256 fixos, em vez de uma action de terceiros com acesso ao job.
       - name: Secret scan (gitleaks)
         env:
@@ -88,6 +86,12 @@ jobs:
           echo "${GITLEAKS_SHA256}  $archive" | sha256sum --check
           tar -xzf "$archive" -C "$RUNNER_TEMP" gitleaks
           "$RUNNER_TEMP/gitleaks" git --redact --no-banner --verbose .
+      - uses: pnpm/action-setup@v6
+        if: ${{ !cancelled() }}
+      # Roda mesmo com o gitleaks falhando: uma verificação nunca esconde o resultado da outra.
+      - name: Dependências (pnpm audit)
+        if: ${{ !cancelled() }}
+        run: pnpm audit --audit-level high
 
   e2e:
     name: E2E (chromium, firefox, webkit)

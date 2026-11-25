@@ -5,6 +5,14 @@ if ! command -v gitleaks >/dev/null 2>&1; then
   echo "❌ gitleaks não encontrado. Instale: https://github.com/gitleaks/gitleaks#installing" >&2
   exit 1
 fi
+# Até a 8.19, `git --staged` ignora o --staged e varre só o histórico: um segredo novo passaria
+# como "tudo limpo". sort -V compara por versão (8.20.0 > 8.9.0), o que a ordem de texto erra.
+GITLEAKS_MIN=8.20.0
+gitleaks_version="$(gitleaks version | sed 's/^v//')"
+if [ "$(printf '%s\n%s\n' "$GITLEAKS_MIN" "$gitleaks_version" | sort -V | head -n1)" != "$GITLEAKS_MIN" ]; then
+  echo "❌ gitleaks $gitleaks_version é antigo: o --staged só funciona a partir da $GITLEAKS_MIN." >&2
+  exit 1
+fi
 gitleaks git --staged --redact --no-banner --verbose
 
 echo "📝 Checando lint e formatação..."

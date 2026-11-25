@@ -25,6 +25,13 @@ describe('gitleaks-version-ok.sh', () => {
     expect(accepts('8.9.0')).toBe(false)
   })
 
+  it.each(['8.20.0garbage', '8.21.0-rc1', '8.20.0\nextra'])(
+    'recusa versão com sobra depois do número (%j)',
+    version => {
+      expect(accepts(version)).toBe(false)
+    }
+  )
+
   it.each(['version is set by build process', '', 'dev'])(
     'recusa versão que não é número (%j)',
     version => {

@@ -4,6 +4,27 @@ Registro de decisões de tooling, configuração e arquitetura com contexto, alt
 
 ---
 
+## 2026-11-26 — Limites de tempo dos testes unitários
+
+**Contexto**: no faladoria-web, dois testes de formulário falharam por tempo com a máquina ocupada
+(recém-ligada, VS Code iniciando, atualização do flatpak), sem defeito na aplicação (faladoria-web,
+`docs/TROUBLESHOOTING.md`, 2026-11-26). Medidos, os testes levavam de 290 a 670 ms; o primeiro de
+cada arquivo, que paga o aquecimento, ficava a ~1,5× do limite de 1 s do `waitFor`.
+
+**Decisão**: `asyncUtilTimeout: 3000` (`src/test/setup.ts`), `testTimeout: 10_000` e
+`slowTestThreshold: 1000` (`vitest.config.ts`), para todo projeto já nascer com a folga.
+
+**Alternativas rejeitadas**:
+
+- Aumentar o tempo de teste a teste (`it(..., 10_000)`): remendo que se repete a cada teste instável.
+- Manter os padrões: falha falsa no pre-push e uma nova rodada inteira do CI.
+
+**Raciocínio**: os limites dizem quando desistir, não quanto o teste deve demorar; o `waitFor`
+termina assim que a condição vale. Desempenho é medido pelo Lighthouse CI e pelo web-vitals, no
+navegador real. O `slowTestThreshold` mantém a lentidão visível no relatório sem virar falha.
+
+---
+
 ## 2026-11-24 — ESLint 10 adiado
 
 **Contexto**: o ESLint 9 deixou de ter suporte (sem correções novas) e o ESLint 10 está

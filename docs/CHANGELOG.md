@@ -9,6 +9,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ### ✨ Adicionado
 
+- Limites de tempo dos testes: `asyncUtilTimeout` 3 s (`waitFor`/`findBy`), `testTimeout` 10 s e `slowTestThreshold` 1 s, que destaca teste lento no relatório sem falhar. Os padrões (1 s e 5 s) derrubavam testes corretos com a máquina ocupada (ver DECISIONS, 2026-11-26)
 - `.coderabbit.yaml`: instrução para `package.json` e `pnpm-lock.yaml` — o CI já roda `pnpm install --frozen-lockfile`, então o CodeRabbit não precisa perguntar se o lockfile está sincronizado (falso positivo nos PRs #25 e #27). `.gitignore` ignora os backups `.coderabbit-recovery-*/` da CLI
 - `.github/pull_request_template.md`: o template de PR padrão de todos os repositórios (fonte: `~/.claude/CLAUDE.md`), com os tipos `test` e `chore / build / ci` e as linhas de segredos e de `DECISIONS`/`TROUBLESHOOTING` no checklist de qualidade
 - `docs/TROUBLESHOOTING.md`, vazio, com o formato das entradas (sintoma, causa raiz, solução, regra prática); README passa a listar ele e o `DECISIONS.md`

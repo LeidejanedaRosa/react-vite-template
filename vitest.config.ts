@@ -9,6 +9,10 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: './src/test/setup.ts',
     css: true,
+    // Limite para declarar um teste travado, não medida de desempenho (essa é do Lighthouse).
+    // Teste acima de 1 s aparece destacado no relatório, sem falhar. Ver docs/DECISIONS.md.
+    testTimeout: 10_000,
+    slowTestThreshold: 1000,
     exclude: ['**/node_modules/**', '**/dist/**', '**/tests/**'],
     coverage: {
       provider: 'v8',
